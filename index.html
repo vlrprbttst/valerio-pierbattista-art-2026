@@ -17,17 +17,20 @@
   button { cursor: pointer; }
   ::selection { background: #111; color: #F5F0E8; }
   @media (max-width: 700px) {
+    html, body { overflow-x: hidden; }
     .nav-links { display: none; }
     .hero-h1 { font-size: 36px !important; }
     .two-col { grid-template-columns: 1fr !important; gap: 40px !important; }
     .three-col { grid-template-columns: 1fr 1fr !important; }
-    .six-col { grid-template-columns: repeat(3, 1fr) !important; }
+    .six-col { grid-template-columns: repeat(2, 1fr) !important; }
     .page-pad { padding: 40px 20px !important; }
     .hero-pad { padding: 64px 20px 56px !important; }
     .feat-pad { padding: 48px 20px !important; }
     .footer-inner { flex-direction: column !important; gap: 24px !important; align-items: flex-start !important; }
     .nav-inner { padding: 18px 20px !important; }
     .shows-grid { grid-template-columns: 1fr !important; }
+    .gallery-meta { display: none !important; }
+    .gallery-section-header { gap: 10px !important; }
   }
 </style>
 </head>
@@ -491,11 +494,11 @@ function ArtGallery() {
 
       {data.map(section => (
         <div key={section.period} style={{ marginBottom: 72 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
+          <div className="gallery-section-header" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
             <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C7B65', whiteSpace: 'nowrap' }}>{section.period}</div>
-            <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8', whiteSpace: 'nowrap' }}>{section.medium}</div>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8' }}>{section.works.length} works</div>
+            <div style={{ flex: 1, height: 1, background: '#C8BCA8', minWidth: 8 }} />
+            <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8', whiteSpace: 'nowrap' }}>{section.medium}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px 16px' }} className="six-col">
             {section.works.map(w => (
