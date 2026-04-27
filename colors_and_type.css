@@ -1,0 +1,263 @@
+/* ============================================================
+   Valerio Pierbattista Art — Design Tokens
+   colors_and_type.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ── Color Primitives ─────────────────────────────────────── */
+:root {
+  --color-cream:       #F5F0E8;   /* primary background */
+  --color-cream-alt:   #EDE7D9;   /* alternate section background */
+  --color-cream-dark:  #DDD4C0;   /* pressed / active surfaces */
+  --color-warm-mid:    #C8BCA8;   /* borders, dividers, muted strokes */
+  --color-sand:        #8C7B65;   /* accent — links, hover, subtle UI */
+  --color-charcoal:    #2A2A2A;   /* secondary text, captions */
+  --color-ink:         #111111;   /* primary foreground text */
+  --color-black:       #000000;   /* high-contrast moments, overlays */
+  --color-white:       #FFFFFF;   /* text on dark backgrounds */
+
+  /* ── Semantic Color Aliases ─────────────────────────────── */
+  --bg:                var(--color-cream);
+  --bg-alt:            var(--color-cream-alt);
+  --bg-inverse:        var(--color-ink);
+
+  --fg:                var(--color-ink);
+  --fg-muted:          var(--color-charcoal);
+  --fg-subtle:         var(--color-sand);
+  --fg-inverse:        var(--color-white);
+
+  --border:            var(--color-warm-mid);
+  --border-strong:     var(--color-charcoal);
+
+  --link:              var(--color-ink);
+  --link-hover:        var(--color-sand);
+
+  --accent:            var(--color-sand);
+}
+
+/* ── Typography Primitives ────────────────────────────────── */
+:root {
+  --font-display:      'Montserrat', sans-serif;
+  --font-body:         'Noto Serif', Georgia, serif;
+  --font-ui:           'Montserrat', sans-serif;
+
+  /* Scale — major third (1.250) */
+  --text-xs:           0.64rem;   /* 10px */
+  --text-sm:           0.8rem;    /* 13px */
+  --text-base:         1rem;      /* 16px */
+  --text-md:           1.25rem;   /* 20px */
+  --text-lg:           1.563rem;  /* 25px */
+  --text-xl:           1.953rem;  /* 31px */
+  --text-2xl:          2.441rem;  /* 39px */
+  --text-3xl:          3.052rem;  /* 49px */
+  --text-4xl:          4rem;      /* 64px */
+  --text-5xl:          6rem;      /* 96px */
+
+  /* Weight */
+  --weight-light:      300;
+  --weight-regular:    400;
+  --weight-medium:     500;
+  --weight-semibold:   600;
+
+  /* Leading */
+  --leading-tight:     1.15;
+  --leading-snug:      1.3;
+  --leading-normal:    1.6;
+  --leading-relaxed:   1.8;
+
+  /* Tracking */
+  --tracking-tight:    -0.02em;
+  --tracking-normal:   0em;
+  --tracking-wide:     0.08em;
+  --tracking-wider:    0.15em;
+}
+
+/* ── Spacing System (8px base) ────────────────────────────── */
+:root {
+  --space-1:    8px;
+  --space-2:   16px;
+  --space-3:   24px;
+  --space-4:   32px;
+  --space-5:   40px;
+  --space-6:   48px;
+  --space-8:   64px;
+  --space-10:  80px;
+  --space-12:  96px;
+  --space-16: 128px;
+  --space-20: 160px;
+}
+
+/* ── Layout Tokens ────────────────────────────────────────── */
+:root {
+  --max-width:         1200px;
+  --gutter:            24px;
+  --gutter-mobile:     16px;
+  --radius:            0px;    /* zero — gallery aesthetic */
+  --border-width:      1px;
+  --section-gap:       var(--space-16);
+}
+
+/* ── Elevation / Shadow ───────────────────────────────────── */
+:root {
+  /* No box shadows in this design system — gallery flat aesthetic */
+  --shadow-none: none;
+}
+
+/* ── Motion ───────────────────────────────────────────────── */
+:root {
+  --ease-out:          cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out:       cubic-bezier(0.4, 0.0, 0.2, 1);
+  --duration-fast:     150ms;
+  --duration-base:     300ms;
+  --duration-slow:     500ms;
+}
+
+/* ── Semantic Typography Classes ──────────────────────────── */
+
+/* Display — large artwork titles, hero headlines */
+.type-display {
+  font-family: var(--font-display);
+  font-weight: var(--weight-light);
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+}
+
+/* H1 — page titles */
+h1, .type-h1 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-light);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg);
+  margin: 0 0 var(--space-3);
+}
+
+/* H2 — section headers */
+h2, .type-h2 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-normal);
+  color: var(--fg);
+  margin: 0 0 var(--space-2);
+}
+
+/* H3 — sub-sections */
+h3, .type-h3 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-normal);
+  color: var(--fg);
+  margin: 0 0 var(--space-1);
+}
+
+/* Body — primary reading text */
+p, .type-body {
+  font-family: var(--font-body);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--fg);
+  margin: 0 0 var(--space-2);
+}
+
+/* Caption — artwork metadata, dates, dimensions */
+.type-caption {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: var(--weight-regular);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--fg-muted);
+}
+
+/* Label — nav items, UI labels (uppercase, tracked) */
+.type-label {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-medium);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+/* Nav link */
+.type-nav {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: none;
+  transition: color var(--duration-base) var(--ease-out);
+}
+.type-nav:hover {
+  color: var(--link-hover);
+}
+
+/* Quote / pull quote */
+blockquote, .type-quote {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: var(--weight-regular);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--fg-muted);
+  border-left: var(--border-width) solid var(--border);
+  margin: var(--space-4) 0;
+  padding-left: var(--space-3);
+}
+
+/* ── Global Resets & Base ─────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--duration-base) var(--ease-out);
+}
+a:hover {
+  color: var(--link-hover);
+}
+
+hr {
+  border: none;
+  border-top: var(--border-width) solid var(--border);
+  margin: var(--space-6) 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--color-ink);
+  color: var(--color-cream);
+}

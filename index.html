@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valerio Pierbattista — Artist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+  body { background: #F5F0E8; color: #111; }
+  button { cursor: pointer; }
+  ::selection { background: #111; color: #F5F0E8; }
+  @media (max-width: 700px) {
+    .nav-links { display: none; }
+    .hero-h1 { font-size: 36px !important; }
+    .two-col { grid-template-columns: 1fr !important; gap: 40px !important; }
+    .three-col { grid-template-columns: 1fr 1fr !important; }
+    .six-col { grid-template-columns: repeat(3, 1fr) !important; }
+    .page-pad { padding: 40px 20px !important; }
+    .hero-pad { padding: 64px 20px 56px !important; }
+    .feat-pad { padding: 48px 20px !important; }
+    .footer-inner { flex-direction: column !important; gap: 24px !important; align-items: flex-start !important; }
+    .nav-inner { padding: 18px 20px !important; }
+    .shows-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+/* ── Nav ─────────────────────────────────────────────────────── */
+function Nav({ page, onNav }) {
+  const links = ['Gallery', 'Exhibitions', 'About', 'Contact'];
+  return (
+    <nav style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '22px 48px', borderBottom: '1px solid #C8BCA8',
+      background: '#F5F0E8', position: 'sticky', top: 0, zIndex: 100,
+    }} className="nav-inner">
+      <button onClick={() => onNav('home')} style={{
+        background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+        fontFamily: "'Montserrat', sans-serif", fontWeight: 300,
+        fontSize: 15, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#111',
+      }}>
+        Valerio Pierbattista
+      </button>
+      <div style={{ display: 'flex', gap: 36 }} className="nav-links">
+        {links.map(l => (
+          <button key={l} onClick={() => onNav(l.toLowerCase())} style={{
+            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            fontFamily: "'Montserrat', sans-serif", fontSize: 9,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: page === l.toLowerCase() ? '#8C7B65' : '#2A2A2A',
+            transition: 'color 250ms',
+          }}>{l}</button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+function Footer() {
+  return (
+    <footer style={{
+      borderTop: '1px solid #C8BCA8', padding: '40px 48px',
+      background: '#F5F0E8', marginTop: 96,
+      display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+    }} className="footer-inner">
+      <div>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#111', marginBottom: 6 }}>
+          Valerio Pierbattista
+        </div>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#8C7B65' }}>
+          Represented in private collections across Europe and the United States.
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
+          Inquiries welcome
+        </div>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#8C7B65' }}>
+          omegaiori@gmail.com
+        </div>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8', marginTop: 10 }}>
+          © 2026 Valerio Pierbattista
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── Gallery data ────────────────────────────────────────────── */
+const BASE = 'assets/artgallery';
+
+const GALLERY_DATA = [
+  {
+    period: '2013',
+    medium: 'Mixed media on paper',
+    works: [
+      { id: '2013-0', file: '2013/CIMG4343.jpg', title: 'Self Portrait after that Night' },
+      { id: '2013-1', file: '2013/CIMG4346.jpg', title: 'Lorraine' },
+      { id: '2013-2', file: '2013/CIMG4347.jpg', title: 'Gone' },
+      { id: '2013-3', file: '2013/CIMG4350.jpg', title: 'Doppel Herz' },
+      { id: '2013-4', file: '2013/Senza-titolo-1.jpg', title: '15/8/12' },
+    ]
+  },
+  {
+    period: '2012',
+    medium: 'Mixed media on paper',
+    works: [
+      { id: '2012-0', file: '2012/CIMG4306.jpg', title: 'I dressed you in her clothes' },
+      { id: '2012-1', file: '2012/CIMG4307.jpg', title: 'These Two Months' },
+      { id: '2012-2', file: '2012/CIMG4308.jpg', title: 'Singes' },
+      { id: '2012-3', file: '2012/CIMG4310.jpg', title: 'You may be beautiful inside/outside but…' },
+      { id: '2012-4', file: '2012/CIMG4316.jpg', title: 'Ad maiora!' },
+      { id: '2012-5', file: '2012/CIMG4317.jpg', title: 'Wears one mask (at a time…)' },
+      { id: '2012-6', file: '2012/CIMG4320.jpg', title: 'The more I think about it' },
+      { id: '2012-7', file: '2012/CIMG4321.jpg', title: 'Smile' },
+      { id: '2012-8', file: '2012/CIMG4322.jpg', title: 'I could' },
+      { id: '2012-9', file: '2012/CIMG4323.jpg', title: 'May I Say?' },
+      { id: '2012-10', file: '2012/CIMG4324.jpg', title: 'Caduceus' },
+      { id: '2012-11', file: '2012/CIMG4325.jpg', title: 'Still searching for you' },
+      { id: '2012-12', file: '2012/20120117181958_002.jpg', title: "That's When You Drew the Line" },
+      { id: '2012-13', file: '2012/20120117181958_007.jpg', title: 'Amy' },
+      { id: '2012-14', file: '2012/20120117181958_015.jpg', title: 'The Downward Spiral of Thinking (and back)' },
+      { id: '2012-15', file: '2012/CIMG3426.jpg', title: 'December 2011' },
+      { id: '2012-16', file: '2012/CIMG3427.jpg', title: 'Read Between the Lines' },
+      { id: '2012-17', file: '2012/CIMG3428.jpg', title: 'Self Portrait' },
+    ]
+  },
+  {
+    period: '2011',
+    medium: 'Mixed media on paper',
+    works: [
+      { id: '2011-0', file: '2011/20110128120558_002.jpg', title: 'Blue Sky Research' },
+      { id: '2011-1', file: '2011/20110128120558_003.jpg', title: 'Dorme, Dorme Sempre…' },
+      { id: '2011-2', file: '2011/20110128120558_004.jpg', title: "It's just a Broken Heart Son…" },
+      { id: '2011-3', file: '2011/20110128120558_005.jpg', title: 'Snakes' },
+      { id: '2011-4', file: '2011/20110128120558_006.jpg', title: 'Draw like a child' },
+      { id: '2011-5', file: '2011/20110128120558_007.jpg', title: 'Modulo Importante' },
+      { id: '2011-6', file: '2011/20110128120828_001.jpg', title: 'Brothers' },
+      { id: '2011-7', file: '2011/20110128120828_002.jpg', title: 'As the world grows colder' },
+      { id: '2011-8', file: '2011/20110128120828_003.jpg', title: 'The Black Flower' },
+      { id: '2011-9', file: '2011/20110128120828_004.jpg', title: 'Emaciato' },
+      { id: '2011-10', file: '2011/20110128120828_005.jpg', title: 'La Fleur du Mal' },
+      { id: '2011-11', file: '2011/20110128120828_007.jpg', title: 'Cage' },
+      { id: '2011-12', file: '2011/20110128120828_008.jpg', title: 'Black' },
+      { id: '2011-13', file: '2011/20110128122529_002.jpg', title: 'Ti Vanti di Grandi Meriti' },
+      { id: '2011-14', file: '2011/20110128122529_003.jpg', title: 'Beware' },
+      { id: '2011-15', file: '2011/20110128122529_004.jpg', title: 'Brother' },
+      { id: '2011-16', file: '2011/20110128122529_005.jpg', title: 'Birdie' },
+      { id: '2011-17', file: '2011/20110128123245_001.jpg', title: 'Untitled' },
+      { id: '2011-18', file: '2011/20110128123245_005.jpg', title: 'Cherish the good (when available)' },
+      { id: '2011-19', file: '2011/20110128123245_006.jpg', title: 'Avevamo promesso di non incolparci più a vicenda' },
+      { id: '2011-20', file: '2011/20110128123245_008.jpg', title: 'Lost' },
+      { id: '2011-21', file: '2011/20110217114504_001.jpg', title: 'Untitled' },
+      { id: '2011-22', file: '2011/20110217114504_002.jpg', title: 'Self Portrait' },
+      { id: '2011-23', file: '2011/20110217114504_003.jpg', title: 'Killer II' },
+      { id: '2011-24', file: '2011/20110217114504_005.jpg', title: "Don't take my baby away" },
+      { id: '2011-25', file: '2011/20110217114504_006.jpg', title: 'Referti referti' },
+      { id: '2011-26', file: '2011/20110217114504_007.jpg', title: 'The Generous' },
+      { id: '2011-27', file: '2011/20110217114504_009.jpg', title: 'Killer' },
+      { id: '2011-28', file: '2011/20110223113036_002.jpg', title: 'Previsione Metereologica Confortante' },
+      { id: '2011-29', file: '2011/20110223113036_003.jpg', title: 'Giving Up' },
+      { id: '2011-30', file: '2011/20110223113036_004.jpg', title: "L'Eterno Indeciso" },
+      { id: '2011-31', file: '2011/20110223113036_006.jpg', title: 'Psychosocial' },
+      { id: '2011-32', file: '2011/20110223113036_007.jpg', title: 'Confuso' },
+      { id: '2011-33', file: '2011/20110223113036_009.jpg', title: 'Happy' },
+      { id: '2011-34', file: '2011/20110315162532_008.jpg', title: 'We just left…' },
+      { id: '2011-35', file: '2011/20110315162532_009.jpg', title: 'Autobus' },
+      { id: '2011-36', file: '2011/20110315162532_015.jpg', title: 'Monster' },
+      { id: '2011-37', file: '2011/20110315162532_016.jpg', title: 'Saremo io e te, col diavolo 3' },
+      { id: '2011-38', file: '2011/20110315162532_017.jpg', title: 'A Story' },
+      { id: '2011-39', file: '2011/20110315162532_020.jpg', title: 'Mirror' },
+      { id: '2011-40', file: '2011/20110329144552_001.jpg', title: 'Anniversary' },
+      { id: '2011-41', file: '2011/20110329144552_003.jpg', title: 'Abstract (Red)' },
+      { id: '2011-42', file: '2011/20110329144552_004.jpg', title: 'Sasha Grey' },
+      { id: '2011-43', file: '2011/20110329144552_005.jpg', title: 'Mars' },
+      { id: '2011-44', file: '2011/20110329144552_006.jpg', title: 'Portrait of Albert Fish' },
+      { id: '2011-45', file: '2011/20110329144552_007.jpg', title: 'Forgiving' },
+      { id: '2011-46', file: '2011/20110329144552_008.jpg', title: 'Abstract (White)' },
+      { id: '2011-47', file: '2011/20110329144552_010.jpg', title: 'Forgiving II' },
+      { id: '2011-48', file: '2011/20110329144552_011.jpg', title: 'Growing Wings (Metamorphosis)' },
+      { id: '2011-49', file: '2011/20110523123829_001.jpg', title: 'Taxi 2' },
+      { id: '2011-50', file: '2011/20110523123829_002.jpg', title: 'Thinking of You' },
+      { id: '2011-51', file: '2011/20110523123829_003.jpg', title: "I Can't Paint if I'm Happy" },
+      { id: '2011-52', file: '2011/20110523123829_005.jpg', title: 'Kiss me' },
+      { id: '2011-53', file: '2011/20110523123829_006.jpg', title: 'Farfalle' },
+      { id: '2011-54', file: '2011/20110523123829_008.jpg', title: 'Sleep' },
+      { id: '2011-55', file: '2011/20110523123829_009.jpg', title: 'Terremoto' },
+      { id: '2011-56', file: '2011/20110523123829_010.jpg', title: 'Waiting for an Answer That Will Never Come' },
+      { id: '2011-57', file: '2011/20110523123829_011.jpg', title: 'Jesus Christ' },
+      { id: '2011-58', file: '2011/20110523123829_012.jpg', title: 'The Thinker' },
+      { id: '2011-59', file: '2011/20110523123829_013.jpg', title: 'Untitled' },
+      { id: '2011-60', file: '2011/20110523123829_014.jpg', title: 'Taxi' },
+      { id: '2011-61', file: '2011/Untitled-1.jpg', title: 'Untitled 1' },
+    ]
+  },
+  {
+    period: '2007–2010',
+    medium: 'Mixed media / silkscreen',
+    works: [
+      { id: '2007-2010-0', file: '2007-2010/atleast.jpg', title: 'Atleast' },
+      { id: '2007-2010-1', file: '2007-2010/babysleep.jpg', title: 'Babysleep' },
+      { id: '2007-2010-2', file: '2007-2010/bbking.jpg', title: 'BB King' },
+      { id: '2007-2010-3', file: '2007-2010/bertrand.jpg', title: 'Bertrand' },
+      { id: '2007-2010-4', file: '2007-2010/bimbociccio.jpg', title: 'Bimbociccio' },
+      { id: '2007-2010-5', file: '2007-2010/bobdylan.jpg', title: 'Bob Dylan' },
+      { id: '2007-2010-6', file: '2007-2010/breastshot.jpg', title: 'Breastshot' },
+      { id: '2007-2010-7', file: '2007-2010/britney.jpg', title: 'Britney' },
+      { id: '2007-2010-8', file: '2007-2010/holmes.jpg', title: 'Holmes' },
+      { id: '2007-2010-9', file: '2007-2010/kevorkian.jpg', title: 'Kevorkian' },
+      { id: '2007-2010-10', file: '2007-2010/lennon.jpg', title: 'Lennon' },
+      { id: '2007-2010-11', file: '2007-2010/lizz.jpg', title: 'Lizz' },
+      { id: '2007-2010-12', file: '2007-2010/malcolmz.jpg', title: 'Malcolm Z' },
+      { id: '2007-2010-13', file: '2007-2010/manson.jpg', title: 'Manson' },
+      { id: '2007-2010-14', file: '2007-2010/markchapman.jpg', title: 'Mark Chapman' },
+      { id: '2007-2010-15', file: '2007-2010/miao.jpg', title: 'Miao' },
+      { id: '2007-2010-16', file: '2007-2010/mona.jpg', title: 'Mona' },
+      { id: '2007-2010-17', file: '2007-2010/moro001.jpg', title: 'Moro' },
+      { id: '2007-2010-18', file: '2007-2010/myspacemakesme.jpg', title: 'Myspace Makes Me' },
+      { id: '2007-2010-19', file: '2007-2010/overwhelmedbig.jpg', title: 'Overwhelmed' },
+      { id: '2007-2010-20', file: '2007-2010/skeletal.jpg', title: 'Skeletal' },
+      { id: '2007-2010-21', file: '2007-2010/skull.jpg', title: 'Skull' },
+      { id: '2007-2010-22', file: '2007-2010/the-moth-and-the-butterfly.jpg', title: 'The Moth and the Butterfly' },
+      { id: '2007-2010-23', file: '2007-2010/truelove.jpg', title: 'True Love' },
+      { id: '2007-2010-24', file: '2007-2010/tyson.jpg', title: 'Tyson' },
+      { id: '2007-2010-25', file: '2007-2010/undertheveilof.jpg', title: 'Under the Veil Of' },
+      { id: '2007-2010-26', file: '2007-2010/valerio_pierbattista.jpg', title: 'Self Portrait' },
+      { id: '2007-2010-27', file: '2007-2010/what.jpg', title: 'What' },
+      { id: '2007-2010-28', file: '2007-2010/white_demon_sexghost.jpg', title: 'White Demon Sexghost' },
+      { id: '2007-2010-29', file: '2007-2010/youwontsurvivetheurbandecay.jpg', title: "You Won't Survive the Urban Decay" },
+    ]
+  },
+  {
+    period: '2005–2006',
+    medium: 'Silkscreen / mixed media',
+    works: [
+      { id: '2005-2006-0', file: '2005-2006/accademic.jpg', title: 'Academic' },
+      { id: '2005-2006-1', file: '2005-2006/annefrank.jpg', title: 'Anne Frank' },
+      { id: '2005-2006-2', file: '2005-2006/annie.jpg', title: 'Annie' },
+      { id: '2005-2006-3', file: '2005-2006/bang.jpg', title: 'Bang' },
+      { id: '2005-2006-4', file: '2005-2006/berko.jpg', title: 'Berko' },
+      { id: '2005-2006-5', file: '2005-2006/blackpainting.jpg', title: 'Black Painting' },
+      { id: '2005-2006-6', file: '2005-2006/blowjob.jpg', title: 'Blowjob' },
+      { id: '2005-2006-7', file: '2005-2006/brainblue.jpg', title: 'Brain Blue' },
+      { id: '2005-2006-8', file: '2005-2006/business.jpg', title: 'Business' },
+      { id: '2005-2006-9', file: '2005-2006/cafiero.jpg', title: 'Cafiero' },
+      { id: '2005-2006-10', file: '2005-2006/charles3.jpg', title: 'Charles' },
+      { id: '2005-2006-11', file: '2005-2006/chicken.jpg', title: 'Chicken' },
+      { id: '2005-2006-12', file: '2005-2006/chinaboy.jpg', title: 'China Boy' },
+      { id: '2005-2006-13', file: '2005-2006/clark.jpg', title: 'Clark' },
+      { id: '2005-2006-14', file: '2005-2006/dealer.jpg', title: 'Dealer' },
+      { id: '2005-2006-15', file: '2005-2006/fonzie.jpg', title: 'Fonzie' },
+      { id: '2005-2006-16', file: '2005-2006/gaykissx.jpg', title: 'Gay Kiss' },
+      { id: '2005-2006-17', file: '2005-2006/giocola.jpg', title: 'Giocola' },
+      { id: '2005-2006-18', file: '2005-2006/greenblow.jpg', title: 'Green Blow' },
+      { id: '2005-2006-19', file: '2005-2006/happyfamilyboys.jpg', title: 'Happy Family Boys' },
+      { id: '2005-2006-20', file: '2005-2006/headshotnjnj.jpg', title: 'Headshot' },
+      { id: '2005-2006-21', file: '2005-2006/kevorkian.jpg', title: 'Kevorkian' },
+      { id: '2005-2006-22', file: '2005-2006/kiss.jpg', title: 'Kiss' },
+      { id: '2005-2006-23', file: '2005-2006/knowurenemy.jpg', title: 'Know Your Enemy' },
+      { id: '2005-2006-24', file: '2005-2006/loveisalie.jpg', title: 'Love is a Lie' },
+      { id: '2005-2006-25', file: '2005-2006/loveyou.jpg', title: 'Love You' },
+      { id: '2005-2006-26', file: '2005-2006/madonna.jpg', title: 'Madonna' },
+      { id: '2005-2006-27', file: '2005-2006/manson.jpg', title: 'Manson' },
+      { id: '2005-2006-28', file: '2005-2006/mengele.jpg', title: 'Mengele' },
+      { id: '2005-2006-29', file: '2005-2006/missing.jpg', title: 'Missing' },
+      { id: '2005-2006-30', file: '2005-2006/monti.jpg', title: 'Monti' },
+      { id: '2005-2006-31', file: '2005-2006/overwhelmedbig.jpg', title: 'Overwhelmed' },
+      { id: '2005-2006-32', file: '2005-2006/papa.jpg', title: 'Papa' },
+      { id: '2005-2006-33', file: '2005-2006/parisriot.jpg', title: 'Paris Riot' },
+      { id: '2005-2006-34', file: '2005-2006/pneumonia.jpg', title: 'Pneumonia' },
+      { id: '2005-2006-35', file: '2005-2006/putyourhands2.jpg', title: 'Put Your Hands Up' },
+      { id: '2005-2006-36', file: '2005-2006/riveraaa.jpg', title: 'Rivera' },
+      { id: '2005-2006-37', file: '2005-2006/selfportrait.jpg', title: 'Self Portrait' },
+      { id: '2005-2006-38', file: '2005-2006/soldiervarious.jpg', title: 'Soldier Various' },
+      { id: '2005-2006-39', file: '2005-2006/sunbathjesus.jpg', title: 'Sunbath Jesus' },
+      { id: '2005-2006-40', file: '2005-2006/truelove.jpg', title: 'True Love' },
+      { id: '2005-2006-41', file: '2005-2006/tsunamiii.jpg', title: 'Tsunami' },
+      { id: '2005-2006-42', file: '2005-2006/twowomen.jpg', title: 'Two Women' },
+      { id: '2005-2006-43', file: '2005-2006/unknown.jpg', title: 'Unknown' },
+      { id: '2005-2006-44', file: '2005-2006/untitledrose.jpg', title: 'Untitled Rose' },
+      { id: '2005-2006-45', file: '2005-2006/valeriesola.jpg', title: 'Valerie Sola' },
+      { id: '2005-2006-46', file: '2005-2006/vienrose.jpg', title: 'Vien Rose' },
+      { id: '2005-2006-47', file: '2005-2006/warenglishhumour.jpg', title: 'War English Humour' },
+      { id: '2005-2006-48', file: '2005-2006/womenhavingsex_colored.jpg', title: 'Women Having Sex (Colored)' },
+    ]
+  },
+  {
+    period: '2004',
+    medium: 'Silkscreen / acrylic',
+    works: [
+      { id: '2004-0', file: '2004/albinotyson.jpg', title: 'Albino Tyson' },
+      { id: '2004-1', file: '2004/andywarhol.jpg', title: 'Andy Warhol' },
+      { id: '2004-2', file: '2004/anorexichic.jpg', title: 'Anorexia Chic' },
+      { id: '2004-3', file: '2004/appendix.jpg', title: 'Appendix' },
+      { id: '2004-4', file: '2004/aproposdusex.JPG', title: 'À propos du Sex' },
+      { id: '2004-5', file: '2004/arafart.jpg', title: 'Arafart' },
+      { id: '2004-6', file: '2004/average.jpg', title: 'Average' },
+      { id: '2004-7', file: '2004/beauty.jpg', title: 'Beauty' },
+      { id: '2004-8', file: '2004/betty.jpg', title: 'Betty' },
+      { id: '2004-9', file: '2004/blowjob.jpg', title: 'Blowjob' },
+      { id: '2004-10', file: '2004/brando.JPG', title: 'Brando' },
+      { id: '2004-11', file: '2004/captainamerica.jpg', title: 'Captain America' },
+      { id: '2004-12', file: '2004/charliemanson.jpg', title: 'Charlie Manson' },
+      { id: '2004-13', file: '2004/clowparty.jpg', title: 'Clown Party' },
+      { id: '2004-14', file: '2004/cosby.jpg', title: 'Cosby' },
+      { id: '2004-15', file: '2004/dalinianrasposy.jpg', title: 'Dalinian Rasposy' },
+      { id: '2004-16', file: '2004/danceuse.jpg', title: 'Danseuse' },
+      { id: '2004-17', file: '2004/deadbaldman.jpg', title: 'Dead Bald Man' },
+      { id: '2004-18', file: '2004/deadnature.jpg', title: 'Dead Nature' },
+      { id: '2004-19', file: '2004/devon.jpg', title: 'Devon' },
+      { id: '2004-20', file: '2004/dita.jpg', title: 'Dita' },
+      { id: '2004-21', file: '2004/doppeld.jpg', title: 'Doppelgänger' },
+      { id: '2004-22', file: '2004/doyoumind.jpg', title: 'Do You Mind?' },
+      { id: '2004-23', file: '2004/dracula.jpg', title: 'Dracula' },
+      { id: '2004-24', file: '2004/educateur.jpg', title: "L'Éducateur" },
+      { id: '2004-25', file: '2004/eraseread.jpg', title: 'Erase/Read' },
+      { id: '2004-26', file: '2004/eyesurgery.jpg', title: 'Eye Surgery' },
+      { id: '2004-27', file: '2004/fat.jpg', title: 'Fat' },
+      { id: '2004-28', file: '2004/feuer.jpg', title: 'Feuer' },
+      { id: '2004-29', file: '2004/fontana.jpg', title: 'Fontana' },
+      { id: '2004-30', file: '2004/gatesbill.jpg', title: 'Bill Gates' },
+      { id: '2004-31', file: '2004/gidgetgein.jpg', title: 'Gidget Gein' },
+      { id: '2004-32', file: '2004/giffordredcross.jpg', title: 'Gifford Red Cross' },
+      { id: '2004-33', file: '2004/godisasniper.jpg', title: 'God is a Sniper' },
+      { id: '2004-34', file: '2004/hitlerrepents.jpg', title: 'Hitler Repents' },
+      { id: '2004-35', file: '2004/homageauxfumeurs.jpg', title: 'Hommage aux Fumeurs' },
+      { id: '2004-36', file: '2004/hommefemme.jpg', title: 'Homme / Femme' },
+      { id: '2004-37', file: '2004/jack.jpg', title: 'Jack' },
+      { id: '2004-38', file: '2004/jesus.jpg', title: 'Jesus' },
+      { id: '2004-39', file: '2004/jfkaintonlyanairport.jpg', title: "JFK Ain't Only an Airport" },
+      { id: '2004-40', file: '2004/jimroot.jpg', title: 'Jim Root' },
+      { id: '2004-41', file: '2004/joedale.jpg', title: 'Joe Dale' },
+      { id: '2004-42', file: '2004/kerrychicken.jpg', title: 'Kerry Chicken' },
+      { id: '2004-43', file: '2004/lambhead.jpg', title: 'Lamb Head' },
+      { id: '2004-44', file: '2004/larevomarx.jpg', title: 'La Révo Marx' },
+      { id: '2004-45', file: '2004/lavey.jpg', title: 'LaVey' },
+      { id: '2004-46', file: '2004/lemalade.JPG', title: 'Le Malade' },
+      { id: '2004-47', file: '2004/lenin.jpg', title: 'Lenin' },
+      { id: '2004-48', file: '2004/leninomegaior.jpg', title: 'Lenin / Omega Ior' },
+      { id: '2004-49', file: '2004/lily.jpg', title: 'Lily' },
+      { id: '2004-50', file: '2004/lizzieborden.jpg', title: 'Lizzie Borden' },
+      { id: '2004-51', file: '2004/lorenab.jpg', title: 'Lorena B.' },
+      { id: '2004-52', file: '2004/malcom.jpg', title: 'Malcolm' },
+      { id: '2004-53', file: '2004/manuelaruda.jpg', title: 'Manuel Aruda' },
+      { id: '2004-54', file: '2004/mao.jpg', title: 'Mao' },
+      { id: '2004-55', file: '2004/marilyn.jpg', title: 'Marilyn' },
+      { id: '2004-56', file: '2004/mcdonaldsgirl.jpg', title: "McDonald's Girl" },
+      { id: '2004-57', file: '2004/mephistophelio.JPG', title: 'Mephistophelio' },
+      { id: '2004-58', file: '2004/mickeymouse.jpg', title: 'Mickey Mouse' },
+      { id: '2004-59', file: '2004/mussolini.jpg', title: 'Mussolini' },
+      { id: '2004-60', file: '2004/nicocalux.jpg', title: 'Nico Calux' },
+      { id: '2004-61', file: '2004/nicole.jpg', title: 'Nicole' },
+      { id: '2004-62', file: '2004/nietzsche.jpg', title: 'Nietzsche' },
+      { id: '2004-63', file: '2004/ohgodimamazed.jpg', title: "Oh God I'm Amazed" },
+      { id: '2004-64', file: '2004/pam.jpg', title: 'Pam' },
+      { id: '2004-65', file: '2004/parishilton.JPG', title: 'Paris Hilton' },
+      { id: '2004-66', file: '2004/purplehitler.jpg', title: 'Purple Hitler' },
+      { id: '2004-67', file: '2004/queencosmetics.jpg', title: 'Queen Cosmetics' },
+      { id: '2004-68', file: '2004/revkorda.jpg', title: 'Rev. Korda' },
+      { id: '2004-69', file: '2004/river.jpg', title: 'River' },
+      { id: '2004-70', file: '2004/saddam.jpg', title: 'Saddam' },
+      { id: '2004-71', file: '2004/sam.jpg', title: 'Sam' },
+      { id: '2004-72', file: '2004/selfportrait.jpg', title: 'Self Portrait' },
+      { id: '2004-73', file: '2004/shaye.jpg', title: 'Shaye' },
+      { id: '2004-74', file: '2004/tate.jpg', title: 'Tate' },
+      { id: '2004-75', file: '2004/television.jpg', title: 'Television' },
+      { id: '2004-76', file: '2004/thankyoumisterpresident.jpg', title: 'Thank You Mister President' },
+      { id: '2004-77', file: '2004/thecreation.jpg', title: 'The Creation' },
+      { id: '2004-78', file: '2004/thedeathoflove.jpg', title: 'The Death of Love' },
+      { id: '2004-79', file: '2004/thesaddistiller.jpg', title: 'The Sad Distiller' },
+      { id: '2004-80', file: '2004/thesuccess.jpg', title: 'The Success' },
+      { id: '2004-81', file: '2004/tictac.jpg', title: 'Tic Tac' },
+      { id: '2004-82', file: '2004/tumorcan.jpg', title: 'Tumor Can' },
+      { id: '2004-83', file: '2004/tumorcans.jpg', title: 'Tumor Cans' },
+      { id: '2004-84', file: '2004/unpopartvisualmanifesto.jpg', title: 'Un Pop Art Visual Manifesto' },
+      { id: '2004-85', file: '2004/venere.jpg', title: 'Venere' },
+      { id: '2004-86', file: '2004/weather.jpg', title: 'Weather' },
+      { id: '2004-87', file: '2004/woman.jpg', title: 'Woman' },
+      { id: '2004-88', file: '2004/yougs.jpg', title: 'Yougs' },
+    ]
+  },
+];
+
+/* ── Gallery lightbox ────────────────────────────────────────── */
+function GalleryLightbox({ work, onClose, onPrev, onNext }) {
+  useEffect(() => {
+    const h = e => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') onNext();
+      if (e.key === 'ArrowLeft') onPrev();
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose, onPrev, onNext]);
+
+  return (
+    <div onClick={onClose} style={{
+      position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.94)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999,
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{ display: 'flex', gap: 32, alignItems: 'center', maxWidth: 860, width: '90%' }}>
+        <button onClick={onPrev} style={{ background: 'none', border: 'none', color: '#8C7B65', fontSize: 22, cursor: 'pointer', padding: '0 8px', flexShrink: 0 }}>←</button>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <img src={BASE + '/' + work.file} alt={work.title}
+            style={{ maxHeight: '75vh', maxWidth: '100%', objectFit: 'contain', display: 'block' }} />
+          <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#F5F0E8', marginBottom: 6 }}>{work.title}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#8C7B65' }}>
+              {work.period} · {work.medium}
+            </div>
+          </div>
+        </div>
+        <button onClick={onNext} style={{ background: 'none', border: 'none', color: '#8C7B65', fontSize: 22, cursor: 'pointer', padding: '0 8px', flexShrink: 0 }}>→</button>
+      </div>
+      <button onClick={onClose} style={{
+        position: 'absolute', top: 24, right: 32,
+        background: 'none', border: 'none', color: '#8C7B65',
+        fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+      }}>✕ Close</button>
+    </div>
+  );
+}
+
+/* ── Gallery item ────────────────────────────────────────────── */
+function GalleryItem({ work, period, defaultMedium, onClick }) {
+  const [hov, setHov] = useState(false);
+  const src = BASE + '/' + work.file;
+  return (
+    <div style={{ cursor: 'pointer' }}
+      onClick={() => onClick({ ...work, period, medium: work.medium || defaultMedium })}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+      <div style={{ width: '100%', height: 140, overflow: 'hidden', background: '#EDE7D9' }}>
+        <img src={src} alt={work.title}
+          style={{ width: '100%', height: '100%', objectFit: 'cover',
+            transform: hov ? 'scale(1.04)' : 'scale(1)',
+            transition: 'transform 350ms ease', display: 'block' }} />
+      </div>
+      <div style={{ paddingTop: 7 }}>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 11, color: '#111', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{work.title}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ArtGallery page ─────────────────────────────────────────── */
+function ArtGallery() {
+  const [activePeriod, setActivePeriod] = useState(null);
+  const [lightbox, setLightbox] = useState(null);
+
+  const periods = GALLERY_DATA.map(d => d.period);
+  const data = activePeriod ? GALLERY_DATA.filter(d => d.period === activePeriod) : GALLERY_DATA;
+  const flatWorks = data.flatMap(s => s.works.map(w => ({ ...w, period: s.period, medium: w.medium || s.medium })));
+
+  const openLightbox = (work) => {
+    const idx = flatWorks.findIndex(w => w.id === work.id);
+    setLightbox({ idx });
+  };
+
+  const btnStyle = (active) => ({
+    fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase',
+    background: active ? '#111' : 'transparent',
+    color: active ? '#F5F0E8' : '#2A2A2A',
+    border: '1px solid ' + (active ? '#111' : '#C8BCA8'),
+    padding: '6px 14px', cursor: 'pointer', transition: 'all 200ms',
+  });
+
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
+        <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: 0 }}>Gallery</h1>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <button onClick={() => setActivePeriod(null)} style={btnStyle(activePeriod === null)}>All</button>
+          {periods.map(p => (
+            <button key={p} onClick={() => setActivePeriod(p)} style={btnStyle(activePeriod === p)}>{p}</button>
+          ))}
+        </div>
+      </div>
+
+      {data.map(section => (
+        <div key={section.period} style={{ marginBottom: 72 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C7B65', whiteSpace: 'nowrap' }}>{section.period}</div>
+            <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8', whiteSpace: 'nowrap' }}>{section.medium}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8' }}>{section.works.length} works</div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px 16px' }} className="six-col">
+            {section.works.map(w => (
+              <GalleryItem key={w.id} work={w} period={section.period} defaultMedium={section.medium} onClick={openLightbox} />
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {lightbox !== null && (
+        <GalleryLightbox
+          work={flatWorks[lightbox.idx]}
+          onClose={() => setLightbox(null)}
+          onPrev={() => setLightbox(l => ({ idx: (l.idx - 1 + flatWorks.length) % flatWorks.length }))}
+          onNext={() => setLightbox(l => ({ idx: (l.idx + 1) % flatWorks.length }))}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ── Exhibitions data ────────────────────────────────────────── */
+const SHOWS_BASE = 'assets/artshows';
+
+const SHOWS_DATA = [
+  {
+    year: 2013,
+    shows: [
+      { title: 'I Want More', type: 'Solo', venue: 'Bamboo Curtain Studio', city: 'Taipei', country: 'Taiwan', dates: 'June 7–14, 2013' },
+      { title: 'Group Show with Valentina Zummo', type: 'Group', venue: 'Barnum Cafè', city: 'Rome', country: 'Italy', dates: 'January 25 – February 8, 2013' },
+    ]
+  },
+  {
+    year: 2012,
+    shows: [
+      { title: 'Make Love with Us', type: 'Group', venue: 'Antica Biblioteca Valle', city: 'Rome', country: 'Italy', dates: 'December 2, 2012' },
+      { title: 'Valerio Pierbattista + Gianni Lancellotti', type: 'Solo', venue: 'Hula Hoop Club', city: 'Rome', country: 'Italy', dates: 'November 23 – December 6, 2012' },
+      { title: 'Group Show', type: 'Group', venue: 'Caffè QuattroTempi', city: 'Rome', country: 'Italy', dates: 'May 25 – June 8, 2012' },
+      { title: 'Lilly and the Noise Collective', type: 'Group', venue: 'Hula Hoop Club', city: 'Rome', country: 'Italy', dates: 'April 20 – May 1, 2012' },
+    ]
+  },
+  {
+    year: 2011,
+    shows: [
+      { title: 'Solo Show', type: 'Solo', venue: 'Tornatora Art Gallery', city: 'Rome', country: 'Italy', dates: 'June 22 – July 6, 2011', photos: 'aequalis', photoCount: 6 },
+      { title: 'Dirty Show Los Angeles', type: 'Group', venue: 'City Center Hotel', city: 'Los Angeles', country: 'USA', dates: 'June 10–11, 2011' },
+      { title: 'Solo Show', type: 'Solo', venue: 'Hula Hoop Club', city: 'Rome', country: 'Italy', dates: 'April 27 – May 11, 2011', photos: 'straight', photoCount: 6 },
+      { title: 'Solo Show', type: 'Solo', venue: 'Balmaceda Arte Joven Gallery', city: 'Santiago de Chile', country: 'Chile', dates: 'March 24 – April 29, 2011' },
+    ]
+  },
+  {
+    year: 2010,
+    shows: [
+      { title: 'Solo Show', type: 'Solo', venue: 'MF Gallery', city: 'Genova', country: 'Italy', dates: 'September 17 – October 10, 2010', photos: 'mfgallery', photoCount: 3 },
+      { title: 'Dirty Show Chicago', type: 'Group', venue: 'Viaduct Theatre', city: 'Chicago', country: 'USA', dates: 'June 25–26, 2010' },
+      { title: 'Group Show', type: 'Group', venue: 'Parlor Art Gallery', city: 'New Jersey', country: 'USA', dates: 'May 29 – June 28, 2010' },
+      { title: 'One Night Stand', type: 'Solo', venue: 'Foollyc', city: 'Rome', country: 'Italy', dates: 'February 26, 2010' },
+      { title: 'Group Show', type: 'Group', venue: 'Faenas Cafè', city: 'Rome', country: 'Italy', dates: 'February 19–26, 2010', photos: 'faenas', photoCount: 3 },
+      { title: 'Group Show', type: 'Group', venue: "Alice's Cafè", city: 'Rome', country: 'Italy', dates: 'February 11–25, 2010', photos: 'alices', photoCount: 6 },
+    ]
+  },
+  {
+    year: 2009,
+    shows: [
+      { title: "Una Mostra per l'Abruzzo", type: 'Group', venue: 'MondoPop International Gallery', city: 'Rome', country: 'Italy', dates: 'May 23 – June 13, 2009', photos: 'mondopop_abruzzo', photoCount: 5 },
+      { title: "Detroit's Dirty Show 10", type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 6–14, 2009', photos: 'dirtydetroit10', photoCount: 5 },
+    ]
+  },
+  {
+    year: 2008,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'KIN Shop', city: 'London', country: 'UK', dates: 'December 2008 – January 2009' },
+      { title: 'Art@Large Juried Group Show', type: 'Group', venue: 'CryBaby Art Gallery', city: 'New York', country: 'USA', dates: 'August 2 – September 3, 2008', photos: 'laboratorio51', photoCount: 6 },
+      { title: 'Solo Show', type: 'Solo', venue: 'Museum of Porn in Art', city: 'Zurich', country: 'Switzerland', dates: 'July 4 – August 31, 2008', photos: 'porninart', photoCount: 6 },
+      { title: 'Caput Mundi Pop — Group Show', type: 'Group', venue: 'MondoPop International Gallery', city: 'Rome', country: 'Italy', dates: 'March 15 – April 26, 2008', photos: 'mondopop_caput', photoCount: 6 },
+      { title: "Detroit's Dirty Show 9", type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 8–16, 2008', photos: 'dirtydetroit9', photoCount: 6 },
+    ]
+  },
+  {
+    year: 2007,
+    shows: [
+      { title: "Artigianando nell'Arte", type: 'Group', venue: 'Group Show', city: 'Torino', country: 'Italy', dates: 'October 6–21, 2007' },
+      { title: 'Art Bologna', type: 'Group', venue: 'Art Fair', city: 'Bologna', country: 'Italy', dates: 'September 1–26, 2007' },
+      { title: 'Arte Erotica 2007', type: 'Group', venue: 'Officine Artistiche', city: 'Treviso', country: 'Italy', dates: 'June 2007', photos: 'mondopop_artesagra', photoCount: 6 },
+      { title: 'Dirty Show 8', type: 'Group', venue: "Bert's Warehouse Theater", city: 'Detroit', country: 'USA', dates: 'February 9–17, 2007' },
+    ]
+  },
+  {
+    year: 2006,
+    shows: [
+      { title: 'Dirty Show 7.5', type: 'Group', venue: "Bert's Warehouse Theater", city: 'Detroit', country: 'USA', dates: 'September 22–24, 2006' },
+      { title: 'Group Show', type: 'Group', venue: 'Bar Magenta', city: 'Santiago de Chile', country: 'Chile', dates: 'July 22 – August 12, 2006' },
+      { title: 'Vaudeville Flesh — Fashion Show & Performances', type: 'Group', venue: 'DragonFly', city: 'Hollywood CA', country: 'USA', dates: 'March 18, 2006' },
+      { title: 'Group Show', type: 'Group', venue: 'Explorer Coffee Gallery', city: 'Rome', country: 'Italy', dates: 'March–June 2006', photos: 'rebacco', photoCount: 6 },
+      { title: 'Dirty Show 7', type: 'Group', venue: 'Tangent Gallery', city: 'Detroit', country: 'USA', dates: 'February 10–14, 2006' },
+      { title: 'Group Show', type: 'Group', venue: 'True Hate Art Gallery', city: 'La Rochelle', country: 'France', dates: 'December 2005 – January 2006' },
+    ]
+  },
+  {
+    year: 2005,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'Skorie Industriali', city: 'Rome', country: 'Italy', dates: 'September 14 – October 2, 2005', photos: 'sag', photoCount: 7 },
+    ]
+  },
+  {
+    year: 2004,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'Le Nebbie di Avalon', city: 'Bracciano, Rome', country: 'Italy', dates: 'December 12, 2004' },
+    ]
+  },
+];
+
+/* ── Show lightbox ───────────────────────────────────────────── */
+function ShowLightbox({ show, onClose }) {
+  const [idx, setIdx] = useState(0);
+  const photos = Array.from({ length: show.photoCount }, (_, i) =>
+    `${SHOWS_BASE}/${show.photos}/${i + 1}.jpg`
+  );
+
+  useEffect(() => {
+    const h = e => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') setIdx(i => (i + 1) % photos.length);
+      if (e.key === 'ArrowLeft') setIdx(i => (i - 1 + photos.length) % photos.length);
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose, photos.length]);
+
+  return (
+    <div onClick={onClose} style={{
+      position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.95)',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 999,
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 800, width: '90%' }}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 20 }}>
+          <div>
+            <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#F5F0E8' }}>{show.title}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#8C7B65', marginTop: 4 }}>
+              {show.venue}, {show.city} · {show.dates}
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#8C7B65', fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer' }}>✕ Close</button>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24, width: '100%' }}>
+          <button onClick={() => setIdx(i => (i - 1 + photos.length) % photos.length)}
+            style={{ background: 'none', border: 'none', color: '#8C7B65', fontSize: 22, cursor: 'pointer', flexShrink: 0 }}>←</button>
+          <img src={photos[idx]} alt={`${show.title} — photo ${idx + 1}`}
+            style={{ flex: 1, maxHeight: '65vh', objectFit: 'contain', display: 'block' }} />
+          <button onClick={() => setIdx(i => (i + 1) % photos.length)}
+            style={{ background: 'none', border: 'none', color: '#8C7B65', fontSize: 22, cursor: 'pointer', flexShrink: 0 }}>→</button>
+        </div>
+        <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {photos.map((p, i) => (
+            <div key={i} onClick={() => setIdx(i)} style={{
+              width: 56, height: 56, overflow: 'hidden', cursor: 'pointer',
+              outline: i === idx ? '2px solid #8C7B65' : '2px solid transparent',
+              transition: 'outline 150ms', flexShrink: 0,
+            }}>
+              <img src={p} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
+          ))}
+        </div>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', color: '#8C7B65', marginTop: 12 }}>
+          {idx + 1} / {photos.length}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Show badge ──────────────────────────────────────────────── */
+function Badge({ type }) {
+  const solo = type === 'Solo';
+  return (
+    <span style={{
+      fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase',
+      background: solo ? '#111' : 'transparent', color: solo ? '#F5F0E8' : '#2A2A2A',
+      border: solo ? 'none' : '1px solid #C8BCA8',
+      padding: '3px 9px', whiteSpace: 'nowrap', display: 'inline-block', flexShrink: 0,
+    }}>{type}</span>
+  );
+}
+
+/* ── Show row ────────────────────────────────────────────────── */
+function ShowRow({ show }) {
+  const [lightbox, setLightbox] = useState(false);
+  return (
+    <>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: 16, alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid #EDE7D9' }} className="shows-grid">
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+          <Badge type={show.type} />
+          <div>
+            <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 15, color: '#111' }}>{show.title}</span>
+            <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#8C7B65', marginLeft: 10 }}>
+              {show.venue}, {show.city} — {show.country}
+            </span>
+          </div>
+        </div>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.07em', color: '#C8BCA8', whiteSpace: 'nowrap' }}>{show.dates}</div>
+        {show.photos ? (
+          <button onClick={() => setLightbox(true)} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: '#8C7B65', borderBottom: '1px solid #8C7B65', paddingBottom: 1, whiteSpace: 'nowrap',
+          }}>{show.photoCount} photos →</button>
+        ) : <div />}
+      </div>
+      {lightbox && <ShowLightbox show={show} onClose={() => setLightbox(false)} />}
+    </>
+  );
+}
+
+/* ── ArtShows page ───────────────────────────────────────────── */
+function ArtShows() {
+  const [view, setView] = useState('list');
+  const [typeFilter, setTypeFilter] = useState('all');
+
+  const toggleType = (t) => setTypeFilter(prev => prev === t ? 'all' : t);
+
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 880, margin: '0 auto' }} className="page-pad">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
+        <div>
+          <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h1>
+          <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#8C7B65' }}>
+            Solo and group shows, 2004–2013 · Rome, London, Detroit, Taipei and beyond
+          </div>
+        </div>
+        <div style={{ display: 'flex', border: '1px solid #C8BCA8' }}>
+          {['list', 'timeline'].map(v => (
+            <button key={v} onClick={() => setView(v)} style={{
+              fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase',
+              background: view === v ? '#111' : 'transparent', color: view === v ? '#F5F0E8' : '#2A2A2A',
+              border: 'none', padding: '8px 18px', cursor: 'pointer', transition: 'all 180ms',
+            }}>{v}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 40, alignItems: 'center' }}>
+        <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#C8BCA8', marginRight: 4 }}>Show</span>
+        {['Solo', 'Group'].map(t => {
+          const active = typeFilter === t;
+          return (
+            <button key={t} onClick={() => toggleType(t)} style={{
+              fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase',
+              background: active ? (t === 'Solo' ? '#111' : '#EDE7D9') : 'transparent',
+              color: active ? (t === 'Solo' ? '#F5F0E8' : '#2A2A2A') : '#8C7B65',
+              border: '1px solid ' + (active ? (t === 'Solo' ? '#111' : '#C8BCA8') : '#C8BCA8'),
+              padding: '5px 14px', cursor: 'pointer', transition: 'all 180ms',
+            }}>{t}{active ? ' ✕' : ''}</button>
+          );
+        })}
+        {typeFilter !== 'all' && (
+          <button onClick={() => setTypeFilter('all')} style={{
+            background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif",
+            fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#C8BCA8', cursor: 'pointer', padding: 0,
+          }}>Show all</button>
+        )}
+      </div>
+
+      {view === 'list' ? (
+        <div>
+          {SHOWS_DATA.map(yg => {
+            const filtered = typeFilter === 'all' ? yg.shows : yg.shows.filter(s => s.type === typeFilter);
+            if (filtered.length === 0) return null;
+            return (
+              <div key={yg.year} style={{ marginBottom: 48 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 4 }}>
+                  <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', color: '#8C7B65', flexShrink: 0 }}>{yg.year}</div>
+                  <div style={{ flex: 1, height: 1, background: '#EDE7D9' }} />
+                </div>
+                {filtered.map((show, i) => <ShowRow key={i} show={show} />)}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{ position: 'relative', paddingLeft: 32 }}>
+          <div style={{ position: 'absolute', left: 8, top: 8, bottom: 8, width: 1, background: '#C8BCA8' }} />
+          {SHOWS_DATA.map(yg => {
+            const filtered = typeFilter === 'all' ? yg.shows : yg.shows.filter(s => s.type === typeFilter);
+            if (filtered.length === 0) return null;
+            return (
+              <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
+                <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#8C7B65' }} />
+                <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 10, letterSpacing: '0.18em', color: '#8C7B65', marginBottom: 10 }}>{yg.year}</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {filtered.map((show, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+                      <Badge type={show.type} />
+                      <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
+                      <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#C8BCA8' }}>
+                        {show.venue}, {show.city}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── HomePage ────────────────────────────────────────────────── */
+const FEATURED = [
+  { file: '2013/CIMG4343.jpg', title: 'Self Portrait after that Night', period: '2013', medium: 'Mixed media on paper' },
+  { file: '2007-2010/the-moth-and-the-butterfly.jpg', title: 'The Moth and the Butterfly', period: '2007–2010', medium: 'Mixed media / silkscreen' },
+  { file: '2004/marilyn.jpg', title: 'Marilyn', period: '2004', medium: 'Silkscreen / acrylic' },
+];
+
+function FeaturedCard({ work, onNav }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onClick={() => onNav('gallery')} style={{ cursor: 'pointer' }}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+      <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9' }}>
+        <img src={BASE + '/' + work.file} alt={work.title}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+            transform: hov ? 'scale(1.03)' : 'scale(1)', transition: 'transform 350ms ease' }} />
+      </div>
+      <div style={{ paddingTop: 8, fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 13, color: '#111' }}>{work.title}</div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#8C7B65', marginTop: 2 }}>{work.period} · {work.medium}</div>
+    </div>
+  );
+}
+
+function HomePage({ onNav }) {
+  return (
+    <div>
+      <div style={{ padding: '120px 48px 100px', maxWidth: 960, margin: '0 auto' }} className="hero-pad">
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#8C7B65', marginBottom: 24 }}>
+          Artist — Rome
+        </div>
+        <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 32px', maxWidth: 700 }}>
+          Coming from a past of stencils, silkscreens, pop and street art.
+        </h1>
+        <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '0 0 40px' }}>
+          I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
+        </p>
+        <button onClick={() => onNav('gallery')} style={{
+          fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',
+          background: '#111', color: '#F5F0E8', border: 'none', padding: '14px 36px', cursor: 'pointer',
+        }}>View gallery →</button>
+      </div>
+
+      <div style={{ background: '#EDE7D9', padding: '72px 48px' }} className="feat-pad">
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap' }}>Selected Works</div>
+            <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '32px 28px' }} className="three-col">
+            {FEATURED.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
+          </div>
+          <div style={{ marginTop: 40, textAlign: 'right' }}>
+            <button onClick={() => onNav('gallery')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111', cursor: 'pointer' }}>
+              View all works →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ padding: '80px 48px', maxWidth: 960, margin: '0 auto' }}>
+        <blockquote style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 22, lineHeight: 1.7, color: '#8C7B65', borderLeft: '1px solid #C8BCA8', paddingLeft: 24, margin: 0, maxWidth: 520 }}>
+          "Radically changing his style and communicative intentions, he now draws something more introspective and meaningful."
+        </blockquote>
+        <div style={{ marginTop: 20 }}>
+          <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
+            Get in touch
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── AboutPage ───────────────────────────────────────────────── */
+function AboutPage() {
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 960, margin: '0 auto' }} className="page-pad">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }} className="two-col">
+        <div>
+          <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C7B65', marginBottom: 24 }}>About</div>
+          <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 40, letterSpacing: '-0.02em', color: '#111', margin: '0 0 32px', lineHeight: 1.1 }}>Valerio Pierbattista</h1>
+          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
+            Born in 1983, Valerio Pierbattista lives and works in Rome, Italy. Coming from a past of stencils, silkscreens, pop and street art, during the last years Valerio abandoned the scene and started from scratch a completely new artistic path.
+          </p>
+          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
+            Radically changing his style and communicative intentions, he now draws something more introspective and meaningful — focusing on storytelling through a self-taught expressionist language.
+          </p>
+          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 32px' }}>
+            His work has been shown internationally — in Rome, London, Detroit, Zurich, Santiago de Chile, Los Angeles, New York, and Taipei.
+          </p>
+        </div>
+        <div>
+          <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9', marginBottom: 12 }}>
+            <img src="assets/images/slide3bg-2.jpg" alt="Studio"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          </div>
+          <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#8C7B65' }}>
+            Work in progress, Rome 2011.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ContactPage ─────────────────────────────────────────────── */
+function ContactPage() {
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 600, margin: '0 auto' }} className="page-pad">
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#8C7B65', marginBottom: 24 }}>Contact</div>
+      <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 24px' }}>Inquiries welcome.</h1>
+      <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 15, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 40px' }}>
+        For questions about available works, commissions, or exhibitions, please get in touch. I respond to all inquiries personally.
+      </p>
+      <div style={{ borderTop: '1px solid #C8BCA8', paddingTop: 28 }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', marginBottom: 8 }}>Email</div>
+        <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#8C7B65', textDecoration: 'none' }}>
+          omegaiori@gmail.com
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ─────────────────────────────────────────────────────── */
+function App() {
+  const [page, setPage] = useState(() => {
+    try { return localStorage.getItem('vp-page') || 'home'; } catch { return 'home'; }
+  });
+
+  const onNav = (p) => {
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    try { localStorage.setItem('vp-page', page); } catch {}
+  }, [page]);
+
+  const renderPage = () => {
+    switch (page) {
+      case 'home':        return <HomePage onNav={onNav} />;
+      case 'gallery':     return <ArtGallery />;
+      case 'exhibitions': return <ArtShows />;
+      case 'about':       return <AboutPage />;
+      case 'contact':     return <ContactPage />;
+      default:            return <HomePage onNav={onNav} />;
+    }
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Nav page={page} onNav={onNav} />
+      <main style={{ flex: 1 }}>
+        {renderPage()}
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
