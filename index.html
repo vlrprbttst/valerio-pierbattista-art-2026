@@ -627,6 +627,7 @@ function ArtGallery() {
   const [lightbox, setLightbox] = useState(null);
 
   const periods = GALLERY_DATA.map(d => d.period);
+  const totalAll = GALLERY_DATA.reduce((sum, d) => sum + d.works.length, 0);
   const data = activePeriod ? GALLERY_DATA.filter(d => d.period === activePeriod) : GALLERY_DATA;
   const flatWorks = data.flatMap(s => s.works.map(w => ({ ...w, period: s.period, medium: w.medium || s.medium })));
 
@@ -647,10 +648,11 @@ function ArtGallery() {
     <div style={{ padding: '64px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
       <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 28px' }}>Gallery</h1>
       <div className="gallery-filters gallery-sticky-filters" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        <button onClick={() => setActivePeriod(null)} style={btnStyle(activePeriod === null)}>All</button>
-        {periods.map(p => (
-          <button key={p} onClick={() => setActivePeriod(p)} style={btnStyle(activePeriod === p)}>{p}</button>
-        ))}
+        <button onClick={() => setActivePeriod(null)} style={btnStyle(activePeriod === null)}>All ({totalAll})</button>
+        {periods.map(p => {
+          const count = GALLERY_DATA.find(d => d.period === p).works.length;
+          return <button key={p} onClick={() => setActivePeriod(p)} style={btnStyle(activePeriod === p)}>{p} ({count})</button>;
+        })}
       </div>
 
       {data.map(section => (
