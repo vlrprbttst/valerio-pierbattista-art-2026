@@ -16,9 +16,27 @@
   body { background: #F5F0E8; color: #111; }
   button { cursor: pointer; }
   ::selection { background: #111; color: #F5F0E8; }
+  .nav-hamburger { display: none; }
+  .nav-mobile-menu { display: none; }
   @media (max-width: 700px) {
     html, body { overflow-x: hidden; }
-    .nav-links { display: none; }
+    * { max-width: 100%; }
+    img, video { max-width: 100%; }
+    .nav-links { display: none !important; }
+    .nav-hamburger { display: flex !important; align-items: center; justify-content: center; }
+    .nav-mobile-menu {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 57px;
+      left: 0; right: 0;
+      background: #111;
+      z-index: 99;
+      padding: 32px 24px 40px;
+      gap: 0;
+      border-bottom: 1px solid #333;
+    }
+    .nav-mobile-menu.closed { display: none; }
     .hero-h1 { font-size: 36px !important; }
     .two-col { grid-template-columns: 1fr !important; gap: 40px !important; }
     .three-col { grid-template-columns: 1fr 1fr !important; }
@@ -30,7 +48,9 @@
     .nav-inner { padding: 18px 20px !important; }
     .shows-grid { grid-template-columns: 1fr !important; }
     .gallery-meta { display: none !important; }
+    .gallery-works-count { display: none !important; }
     .gallery-section-header { gap: 10px !important; }
+    .gallery-filters { justify-content: flex-start !important; }
   }
 </style>
 </head>
@@ -42,32 +62,62 @@ const { useState, useEffect, useRef } = React;
 
 /* ── Nav ─────────────────────────────────────────────────────── */
 function Nav({ page, onNav }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const links = ['Gallery', 'Exhibitions', 'About', 'Contact'];
+
+  const handleNav = (dest) => { setMenuOpen(false); onNav(dest); };
+
   return (
-    <nav style={{
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '22px 48px', borderBottom: '1px solid #C8BCA8',
-      background: '#F5F0E8', position: 'sticky', top: 0, zIndex: 100,
-    }} className="nav-inner">
-      <button onClick={() => onNav('home')} style={{
-        background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-        fontFamily: "'Montserrat', sans-serif", fontWeight: 300,
-        fontSize: 15, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#111',
-      }}>
-        Valerio Pierbattista
-      </button>
-      <div style={{ display: 'flex', gap: 36 }} className="nav-links">
-        {links.map(l => (
-          <button key={l} onClick={() => onNav(l.toLowerCase())} style={{
-            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            fontFamily: "'Montserrat', sans-serif", fontSize: 9,
-            letterSpacing: '0.18em', textTransform: 'uppercase',
-            color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
-            transition: 'color 250ms',
+    <>
+      <nav style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '22px 48px', borderBottom: '1px solid #C8BCA8',
+        background: '#F5F0E8', position: 'sticky', top: 0, zIndex: 100,
+      }} className="nav-inner">
+        <button onClick={() => handleNav('home')} style={{
+          background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+          fontFamily: "'Montserrat', sans-serif", fontWeight: 300,
+          fontSize: 15, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#111',
+        }}>
+          Valerio<br/>Pierbattista
+        </button>
+        <div style={{ display: 'flex', gap: 36 }} className="nav-links">
+          {links.map(l => (
+            <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              fontFamily: "'Montserrat', sans-serif", fontSize: 9,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
+              transition: 'color 250ms',
+            }}>{l}</button>
+          ))}
+        </div>
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer', padding: 4,
+            color: '#111', fontSize: 20, lineHeight: 1,
+          }}
+          aria-label="Menu"
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+      </nav>
+      <div className={'nav-mobile-menu' + (menuOpen ? '' : ' closed')}>
+        {links.map((l, i) => (
+          <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '18px 0',
+            borderBottom: i < links.length - 1 ? '1px solid #333' : 'none',
+            fontFamily: "'Montserrat', sans-serif", fontSize: 11,
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: page === l.toLowerCase() ? '#A08060' : '#F5F0E8',
+            textAlign: 'left', width: '100%',
           }}>{l}</button>
         ))}
       </div>
-    </nav>
+    </>
   );
 }
 
@@ -544,7 +594,7 @@ function ArtGallery() {
     <div style={{ padding: '64px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
         <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: 0 }}>Gallery</h1>
-        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+        <div className="gallery-filters" style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           <button onClick={() => setActivePeriod(null)} style={btnStyle(activePeriod === null)}>All</button>
           {periods.map(p => (
             <button key={p} onClick={() => setActivePeriod(p)} style={btnStyle(activePeriod === p)}>{p}</button>
@@ -558,7 +608,7 @@ function ArtGallery() {
             <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap' }}>{section.period}</div>
             <div style={{ flex: 1, height: 1, background: '#C8BCA8', minWidth: 8 }} />
             <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.medium}</div>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
+            <div className="gallery-works-count" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px 16px' }} className="six-col">
             {section.works.map(w => (
