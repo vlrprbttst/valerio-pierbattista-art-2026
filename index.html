@@ -851,12 +851,12 @@ function ShowEntry({ show }) {
   const hasMedia = show.photos && show.photoCount > 0;
   const mediaLabel = `${show.photoCount} photo${show.photoCount > 1 ? 's' : ''}`;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, background: '#FFFDF8', padding: '16px 20px', boxShadow: '0 1px 6px rgba(100,80,60,0.1), 0 1px 2px rgba(100,80,60,0.06)' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
         <Badge type={show.type} />
         <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
         <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#5F5347' }}>
-          {show.venue}, {show.city}
+          {show.venue}, {show.city}, {show.country}
         </span>
         {hasMedia && (
           <button onClick={() => setOpen(true)} style={{
@@ -888,7 +888,7 @@ function ArtShows() {
           <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
             <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#705C48' }} />
             <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10 }}>{yg.year}</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {yg.shows.map((show, i) => (
                 <ShowEntry key={i} show={show} />
               ))}
