@@ -609,7 +609,7 @@ function GalleryItem({ work, period, defaultMedium, onClick }) {
       onKeyDown={handleKey}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{ width: '100%', height: 140, overflow: 'hidden', background: '#EDE7D9' }}>
-        <img src={src} alt={work.title}
+        <img src={src} alt={work.title} loading="lazy"
           style={{ width: '100%', height: '100%', objectFit: 'cover',
             transform: hov ? 'scale(1.04)' : 'scale(1)',
             transition: 'transform 350ms ease', display: 'block' }} />
