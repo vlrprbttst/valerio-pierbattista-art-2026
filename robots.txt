@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vlrprbttst.github.io/valerio-pierbattista-art-2026/sitemap.xml
