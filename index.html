@@ -85,7 +85,7 @@ function Nav({ page, onNav }) {
           {links.map(l => (
             <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
               background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              fontFamily: "'Montserrat', sans-serif", fontSize: 9,
+              fontFamily: "'Montserrat', sans-serif", fontSize: 11,
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
               transition: 'color 250ms',
@@ -110,7 +110,7 @@ function Nav({ page, onNav }) {
             background: 'none', border: 'none', cursor: 'pointer',
             padding: '18px 0',
             borderBottom: i < links.length - 1 ? '1px solid #333' : 'none',
-            fontFamily: "'Montserrat', sans-serif", fontSize: 11,
+            fontFamily: "'Montserrat', sans-serif", fontSize: 13,
             letterSpacing: '0.2em', textTransform: 'uppercase',
             color: page === l.toLowerCase() ? '#A08060' : '#F5F0E8',
             textAlign: 'left', width: '100%',
@@ -138,13 +138,13 @@ function Footer() {
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
           Inquiries welcome
         </div>
         <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48' }}>
           omegaiori@gmail.com
         </div>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', marginTop: 10 }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', marginTop: 10 }}>
           © 2026 Valerio Pierbattista
         </div>
       </div>
@@ -531,7 +531,7 @@ function GalleryLightbox({ work, onClose, onPrev, onNext }) {
           <button onClick={onPrev} style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>←</button>
           <div style={{ textAlign: 'center', flex: 1 }}>
             <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 17, color: '#F5F0E8', marginBottom: 5 }}>{work.title}</div>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
               {work.period} · {work.medium}
             </div>
           </div>
@@ -541,7 +541,7 @@ function GalleryLightbox({ work, onClose, onPrev, onNext }) {
       <button onClick={onClose} style={{
         position: 'absolute', top: 24, right: 32,
         background: 'none', border: 'none', color: '#A08060',
-        fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+        fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
       }}>✕ Close</button>
     </div>
   );
@@ -552,7 +552,7 @@ function GalleryItem({ work, period, defaultMedium, onClick }) {
   const [hov, setHov] = useState(false);
   const src = BASE + '/' + work.file;
   return (
-    <div style={{ cursor: 'pointer' }}
+    <div style={{ cursor: 'pointer', minWidth: 0 }}
       onClick={() => onClick({ ...work, period, medium: work.medium || defaultMedium })}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{ width: '100%', height: 140, overflow: 'hidden', background: '#EDE7D9' }}>
@@ -562,7 +562,7 @@ function GalleryItem({ work, period, defaultMedium, onClick }) {
             transition: 'transform 350ms ease', display: 'block' }} />
       </div>
       <div style={{ paddingTop: 7 }}>
-        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 11, color: '#111', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{work.title}</div>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#111', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{work.title}</div>
       </div>
     </div>
   );
@@ -583,7 +583,7 @@ function ArtGallery() {
   };
 
   const btnStyle = (active) => ({
-    fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase',
+    fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
     background: active ? '#111' : 'transparent',
     color: active ? '#F5F0E8' : '#2A2A2A',
     border: '1px solid ' + (active ? '#111' : '#C8BCA8'),
@@ -605,10 +605,10 @@ function ArtGallery() {
       {data.map(section => (
         <div key={section.period} style={{ marginBottom: 72 }}>
           <div className="gallery-section-header" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap' }}>{section.period}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap' }}>{section.period}</div>
             <div style={{ flex: 1, height: 1, background: '#C8BCA8', minWidth: 8 }} />
-            <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.medium}</div>
-            <div className="gallery-works-count" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
+            <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.medium}</div>
+            <div className="gallery-works-count" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px 16px' }} className="six-col">
             {section.works.map(w => (
@@ -665,9 +665,9 @@ const SHOWS_DATA = [
       { title: 'Solo Show', type: 'Solo', venue: 'MF Gallery', city: 'Genova', country: 'Italy', dates: 'September 17 – October 10, 2010' },
       { title: 'Dirty Show Chicago', type: 'Group', venue: 'Viaduct Theatre', city: 'Chicago', country: 'USA', dates: 'June 25–26, 2010' },
       { title: 'Group Show', type: 'Group', venue: 'Parlor Art Gallery', city: 'New Jersey', country: 'USA', dates: 'May 29 – June 28, 2010' },
-      { title: 'One Night Stand', type: 'Solo', venue: 'Foollyc', city: 'Rome', country: 'Italy', dates: 'February 26, 2010' },
+      { title: 'One Night Stand', type: 'Solo', venue: 'Foollyc', city: 'Rome', country: 'Italy', dates: 'February 26, 2010', photos: 'foollyc', photoCount: 0, flyer: true },
       { title: 'Group Show', type: 'Group', venue: 'Faenas Cafè', city: 'Rome', country: 'Italy', dates: 'February 19–26, 2010', photos: 'faenas', photoCount: 3 },
-      { title: 'Group Show', type: 'Group', venue: "Alice's Cafè", city: 'Rome', country: 'Italy', dates: 'February 11–25, 2010', photos: 'alices', photoCount: 6 },
+      { title: 'Group Show', type: 'Group', venue: "Alice's Cafè", city: 'Rome', country: 'Italy', dates: 'February 11–25, 2010', photos: 'alices', photoCount: 6, flyer: true },
       { title: 'Dirty Show 2010', type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 12–20, 2010' },
     ]
   },
@@ -675,7 +675,7 @@ const SHOWS_DATA = [
     year: 2009,
     shows: [
       { title: 'Group Show', type: 'Group', venue: 'MondoPop International Gallery', city: 'Rome', country: 'Italy', dates: 'December 12, 2009 – February 20, 2010', photos: 'mondopop_artesagra', photoCount: 6 },
-      { title: 'Group Show', type: 'Group', venue: 'Erotic Museum', city: 'Amsterdam', country: 'Netherlands', dates: 'December 10, 2009' },
+      { title: 'Group Show', type: 'Group', venue: 'Erotic Museum', city: 'Amsterdam', country: 'Netherlands', dates: 'December 10, 2009', photos: 'sag', photoCount: 7 },
       { title: 'Group Show', type: 'Group', venue: 'Re Bacco', city: 'Rome', country: 'Italy', dates: 'November 26 – December 2, 2009', photos: 'rebacco', photoCount: 6 },
       { title: 'Group Show', type: 'Group', venue: 'Aequalis Contemporary Art Gallery', city: 'Rome', country: 'Italy', dates: 'November 9 – December 9, 2009', photos: 'aequalis', photoCount: 6 },
       { title: 'Moth-a-Fucker', type: 'Group', venue: 'MF Gallery', city: 'Genova', country: 'Italy', dates: 'October 24 – December 22, 2009', photos: 'mfgallery', photoCount: 3 },
@@ -720,7 +720,7 @@ const SHOWS_DATA = [
   {
     year: 2005,
     shows: [
-      { title: 'Solo Show', type: 'Solo', venue: 'Skorie Industriali', city: 'Rome', country: 'Italy', dates: 'September – October 2005', photos: 'sag', photoCount: 7 },
+      { title: 'Solo Show', type: 'Solo', venue: 'Skorie Industriali', city: 'Rome', country: 'Italy', dates: 'September – October 2005' },
     ]
   },
   {
@@ -734,9 +734,10 @@ const SHOWS_DATA = [
 /* ── Show lightbox ───────────────────────────────────────────── */
 function ShowLightbox({ show, onClose }) {
   const [idx, setIdx] = useState(0);
-  const photos = Array.from({ length: show.photoCount }, (_, i) =>
-    `${SHOWS_BASE}/${show.photos}/${i + 1}.jpg`
-  );
+  const photos = [
+    ...Array.from({ length: show.photoCount }, (_, i) => `${SHOWS_BASE}/${show.photos}/${i + 1}.jpg`),
+    ...(show.flyer ? [`${SHOWS_BASE}/${show.photos}/flyer.jpg`] : []),
+  ];
 
   useEffect(() => {
     const h = e => {
@@ -761,10 +762,10 @@ function ShowLightbox({ show, onClose }) {
             style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', flexShrink: 0, padding: 0 }}>←</button>
           <div style={{ textAlign: 'center', flex: 1 }}>
             <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 17, color: '#F5F0E8', marginBottom: 4 }}>{show.title}</div>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A08060' }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A08060' }}>
               {show.venue}, {show.city} · {show.dates}
             </div>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', color: '#A08060', marginTop: 4 }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', color: '#A08060', marginTop: 4 }}>
               {idx + 1} / {photos.length}
             </div>
           </div>
@@ -792,11 +793,40 @@ function Badge({ type }) {
   const solo = type === 'Solo';
   return (
     <span style={{
-      fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase',
+      fontFamily: "'Montserrat',sans-serif", fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase',
       background: solo ? '#111' : 'transparent', color: solo ? '#F5F0E8' : '#2A2A2A',
       border: solo ? 'none' : '1px solid #C8BCA8',
       padding: '3px 9px', whiteSpace: 'nowrap', display: 'inline-block', flexShrink: 0,
     }}>{type}</span>
+  );
+}
+
+/* ── Show entry (timeline row with optional photo/flyer trigger) ── */
+function ShowEntry({ show }) {
+  const [open, setOpen] = useState(false);
+  const hasMedia = show.photos && (show.photoCount > 0 || show.flyer);
+  const mediaLabel = show.photoCount > 0
+    ? `${show.photoCount} photo${show.photoCount > 1 ? 's' : ''}${show.flyer ? ' + flyer' : ''}`
+    : 'flyer';
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+        <Badge type={show.type} />
+        <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
+        <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#5F5347' }}>
+          {show.venue}, {show.city}
+        </span>
+        {hasMedia && (
+          <button onClick={() => setOpen(true)} style={{
+            background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif",
+            fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A08060',
+            cursor: 'pointer', padding: 0, textDecoration: 'underline', flexShrink: 0,
+          }}>{mediaLabel}</button>
+        )}
+      </div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.08em', color: '#9A8B7A' }}>{show.dates}</div>
+      {open && <ShowLightbox show={show} onClose={() => setOpen(false)} />}
+    </div>
   );
 }
 
@@ -815,16 +845,10 @@ function ArtShows() {
         {SHOWS_DATA.map(yg => (
           <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
             <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#705C48' }} />
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 10, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10 }}>{yg.year}</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10 }}>{yg.year}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {yg.shows.map((show, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-                  <Badge type={show.type} />
-                  <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
-                  <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#5F5347' }}>
-                    {show.venue}, {show.city}
-                  </span>
-                </div>
+                <ShowEntry key={i} show={show} />
               ))}
             </div>
           </div>
@@ -852,7 +876,7 @@ function FeaturedCard({ work, onNav }) {
             transform: hov ? 'scale(1.03)' : 'scale(1)', transition: 'transform 350ms ease' }} />
       </div>
       <div style={{ paddingTop: 8, fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 13, color: '#111' }}>{work.title}</div>
-      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#705C48', marginTop: 2 }}>{work.period} · {work.medium}</div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#705C48', marginTop: 2 }}>{work.period} · {work.medium}</div>
     </div>
   );
 }
@@ -861,7 +885,7 @@ function HomePage({ onNav }) {
   return (
     <div>
       <div style={{ padding: '120px 48px 100px', maxWidth: 960, margin: '0 auto' }} className="hero-pad">
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>
           Artist — Rome
         </div>
         <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 32px', maxWidth: 700 }}>
@@ -871,7 +895,7 @@ function HomePage({ onNav }) {
           I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
         </p>
         <button onClick={() => onNav('gallery')} style={{
-          fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',
+          fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
           background: '#111', color: '#F5F0E8', border: 'none', padding: '14px 36px', cursor: 'pointer',
         }}>View gallery →</button>
       </div>
@@ -879,14 +903,14 @@ function HomePage({ onNav }) {
       <div style={{ background: '#EDE7D9', padding: '72px 48px' }} className="feat-pad">
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap' }}>Selected Works</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap' }}>Selected Works</div>
             <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '32px 28px' }} className="three-col">
             {FEATURED.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
           </div>
           <div style={{ marginTop: 40, textAlign: 'right' }}>
-            <button onClick={() => onNav('gallery')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111', cursor: 'pointer' }}>
+            <button onClick={() => onNav('gallery')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111', cursor: 'pointer' }}>
               View all works →
             </button>
           </div>
@@ -898,7 +922,7 @@ function HomePage({ onNav }) {
           "Radically changing his style and communicative intentions, he now draws something more introspective and meaningful."
         </blockquote>
         <div style={{ marginTop: 20 }}>
-          <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
+          <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
             Get in touch
           </button>
         </div>
@@ -913,7 +937,7 @@ function AboutPage() {
     <div style={{ padding: '64px 48px', maxWidth: 960, margin: '0 auto' }} className="page-pad">
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }} className="two-col">
         <div>
-          <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>About</div>
+          <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>About</div>
           <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 40, letterSpacing: '-0.02em', color: '#111', margin: '0 0 32px', lineHeight: 1.1 }}>Valerio Pierbattista</h1>
           <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
             Born in 1983, Valerio Pierbattista lives and works in Rome, Italy. Coming from a past of stencils, silkscreens, pop and street art, during the last years Valerio abandoned the scene and started from scratch a completely new artistic path.
@@ -943,13 +967,13 @@ function AboutPage() {
 function ContactPage() {
   return (
     <div style={{ padding: '64px 48px', maxWidth: 600, margin: '0 auto' }} className="page-pad">
-      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>Contact</div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>Contact</div>
       <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 24px' }}>Inquiries welcome.</h1>
       <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 15, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 40px' }}>
         For questions about available works, commissions, or exhibitions, please get in touch. I respond to all inquiries personally.
       </p>
       <div style={{ borderTop: '1px solid #C8BCA8', paddingTop: 28 }}>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', marginBottom: 8 }}>Email</div>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', marginBottom: 8 }}>Email</div>
         <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#705C48', textDecoration: 'none' }}>
           omegaiori@gmail.com
         </a>
