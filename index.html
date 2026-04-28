@@ -778,11 +778,21 @@ const SHOWS_DATA = [
 /* ── Show lightbox ───────────────────────────────────────────── */
 function ShowLightbox({ show, onClose }) {
   const [idx, setIdx] = useState(0);
+  const [photos, setPhotos] = useState(null); // null = probing
   const closeRef = useRef(null);
-  const encodeFolder = f => f.split('/').map(encodeURIComponent).join('/');
-  const photos = (show.sources || []).flatMap(({ folder, count }) =>
-    Array.from({ length: count }, (_, i) => `${SHOWS_BASE}/${encodeFolder(folder)}/${i + 1}.jpg`)
-  );
+
+  useEffect(() => {
+    const encodeFolder = f => f.split('/').map(encodeURIComponent).join('/');
+    const candidates = (show.sources || []).flatMap(({ folder, count }) =>
+      Array.from({ length: count }, (_, i) => `${SHOWS_BASE}/${encodeFolder(folder)}/${i + 1}.jpg`)
+    );
+    Promise.all(candidates.map(url => new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    }))).then(results => setPhotos(results.filter(Boolean)));
+  }, [show]);
 
   useEffect(() => {
     const prev = document.activeElement;
@@ -791,6 +801,7 @@ function ShowLightbox({ show, onClose }) {
   }, []);
 
   useEffect(() => {
+    if (!photos) return;
     const h = e => {
       if (e.key === 'Escape') onClose();
       if (e.key === 'ArrowRight') setIdx(i => (i + 1) % photos.length);
@@ -798,7 +809,10 @@ function ShowLightbox({ show, onClose }) {
     };
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
-  }, [onClose, photos.length]);
+  }, [onClose, photos]);
+
+  const loading = photos === null;
+  const empty = !loading && photos.length === 0;
 
   return (
     <div role="dialog" aria-modal="true" aria-label={`${show.title} — photos`}
@@ -806,7 +820,12 @@ function ShowLightbox({ show, onClose }) {
         position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.95)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 999,
       }}>
-      <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 900, width: '92%' }}>
+      {(loading || empty) && (
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
+          {loading ? 'Loading…' : 'No photos available'}
+        </div>
+      )}
+      {!loading && !empty && <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 900, width: '92%' }}>
         <img src={photos[idx]} alt={`${show.title} — photo ${idx + 1} of ${photos.length}`}
           style={{ maxHeight: '68vh', maxWidth: '100%', objectFit: 'contain', display: 'block' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 20, gap: 16 }}>
@@ -841,7 +860,7 @@ function ShowLightbox({ show, onClose }) {
             </button>
           ))}
         </div>
-      </div>
+      </div>}
       <button ref={closeRef} onClick={onClose} aria-label="Close photos" style={{
         position: 'absolute', top: 24, right: 32,
         background: 'none', border: 'none', color: '#A08060',
