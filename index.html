@@ -1117,8 +1117,14 @@ function ContactPage() {
 }
 
 /* ── App ─────────────────────────────────────────────────────── */
+const VALID_PAGES = ['gallery', 'exhibitions', 'about', 'contact'];
+const getPageFromHash = () => {
+  const hash = window.location.hash.slice(1);
+  return VALID_PAGES.includes(hash) ? hash : 'home';
+};
+
 function App() {
-  const [page, setPage] = useState('home');
+  const [page, setPage] = useState(getPageFromHash);
   const [navState, setNavState] = useState({});
 
   const PAGE_TITLES = {
@@ -1133,7 +1139,19 @@ function App() {
     document.title = PAGE_TITLES[page] || 'Valerio Pierbattista — Artist';
   }, [page]);
 
+  useEffect(() => {
+    const onPop = () => {
+      setPage(getPageFromHash());
+      setNavState({});
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
   const onNav = (p, state = {}) => {
+    const hash = p === 'home' ? '' : p;
+    window.history.pushState({}, '', hash ? `#${hash}` : window.location.pathname);
     setPage(p);
     setNavState(state);
     window.scrollTo({ top: 0, behavior: 'smooth' });
