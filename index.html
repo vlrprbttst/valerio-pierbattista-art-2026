@@ -878,16 +878,12 @@ function FeaturedCard({ work, onNav }) {
 }
 
 function HomePage({ onNav }) {
-  const [featured] = useState(() => {
-    const flat = GALLERY_DATA.flatMap(s =>
-      s.works.map(w => ({ file: w.file, title: w.title, period: s.period, medium: w.medium || s.medium }))
-    );
-    for (let i = flat.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [flat[i], flat[j]] = [flat[j], flat[i]];
-    }
-    return flat.slice(0, 4);
-  });
+  const [featured] = useState(() =>
+    GALLERY_DATA.map(s => {
+      const w = s.works[Math.floor(Math.random() * s.works.length)];
+      return { file: w.file, title: w.title, period: s.period, medium: w.medium || s.medium };
+    })
+  );
 
   return (
     <div>
