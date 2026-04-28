@@ -40,6 +40,9 @@
   button { cursor: pointer; }
   ::selection { background: #111; color: #F5F0E8; }
   :focus-visible { outline: 2px solid #705C48; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
   .skip-link {
     position: absolute; top: -100%; left: 0; z-index: 9999;
     background: #111; color: #F5F0E8; padding: 10px 20px;
@@ -126,13 +129,15 @@ function Nav({ page, onNav }) {
         </button>
         <div style={{ display: 'flex', gap: 36 }} className="nav-links">
           {links.map(l => (
-            <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              fontFamily: "'Montserrat', sans-serif", fontSize: 11,
-              letterSpacing: '0.18em', textTransform: 'uppercase',
-              color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
-              transition: 'color 250ms',
-            }}>{l}</button>
+            <button key={l} onClick={() => handleNav(l.toLowerCase())}
+              aria-current={page === l.toLowerCase() ? 'page' : undefined}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                fontFamily: "'Montserrat', sans-serif", fontSize: 11,
+                letterSpacing: '0.18em', textTransform: 'uppercase',
+                color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
+                transition: 'color 250ms',
+              }}>{l}</button>
           ))}
         </div>
         <button
@@ -143,11 +148,13 @@ function Nav({ page, onNav }) {
             color: '#111', fontSize: 20, lineHeight: 1,
           }}
           aria-label="Menu"
+          aria-expanded={menuOpen}
+          aria-controls="nav-mobile-menu"
         >
           {menuOpen ? '✕' : '☰'}
         </button>
       </nav>
-      <div className={'nav-mobile-menu' + (menuOpen ? '' : ' closed')}>
+      <div id="nav-mobile-menu" className={'nav-mobile-menu' + (menuOpen ? '' : ' closed')} aria-hidden={!menuOpen}>
         {links.map((l, i) => (
           <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
             background: 'none', border: 'none', cursor: 'pointer',
@@ -184,9 +191,9 @@ function Footer() {
         <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
           Inquiries welcome
         </div>
-        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48' }}>
+        <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48', textDecoration: 'none' }}>
           omegaiori@gmail.com
-        </div>
+        </a>
         <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', marginTop: 10 }}>
           © 2026 Valerio Pierbattista
         </div>
@@ -659,7 +666,7 @@ function ArtGallery() {
       {data.map(section => (
         <div key={section.period} style={{ marginBottom: 72 }}>
           <div className="gallery-section-header" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap' }}>{section.period}</div>
+            <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap', fontWeight: 400, margin: 0 }}>{section.period}</h2>
             <div style={{ flex: 1, height: 1, background: '#C8BCA8', minWidth: 8 }} />
             <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.medium}</div>
             <div className="gallery-works-count" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
@@ -846,7 +853,7 @@ function ShowLightbox({ show, onClose }) {
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 999,
       }}>
       {(loading || empty) && (
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
+        <div role="status" aria-live="polite" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
           {loading ? 'Loading…' : 'No photos available'}
         </div>
       )}
@@ -951,7 +958,7 @@ function ArtShows() {
         {SHOWS_DATA.map(yg => (
           <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
             <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#705C48' }} />
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10 }}>{yg.year}</div>
+            <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10, fontWeight: 400 }}>{yg.year}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {yg.shows.map((show, i) => (
                 <ShowEntry key={i} show={show} />
@@ -968,8 +975,11 @@ function ArtShows() {
 
 function FeaturedCard({ work, onNav }) {
   const [hov, setHov] = useState(false);
+  const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNav('gallery'); } };
   return (
-    <div onClick={() => onNav('gallery')} style={{ cursor: 'pointer' }}
+    <div role="button" tabIndex={0} aria-label={`View ${work.title} in gallery`}
+      onClick={() => onNav('gallery')} onKeyDown={handleKey}
+      style={{ cursor: 'pointer' }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9' }}>
         <img src={BASE + '/' + work.file} alt={work.title}
