@@ -16,6 +16,14 @@
   body { background: #F5F0E8; color: #111; }
   button { cursor: pointer; }
   ::selection { background: #111; color: #F5F0E8; }
+  :focus-visible { outline: 2px solid #705C48; outline-offset: 3px; }
+  .skip-link {
+    position: absolute; top: -100%; left: 0; z-index: 9999;
+    background: #111; color: #F5F0E8; padding: 10px 20px;
+    font-family: 'Montserrat', sans-serif; font-size: 13px;
+    letter-spacing: 0.08em; text-decoration: none;
+  }
+  .skip-link:focus { top: 0; }
   .gallery-sticky-filters {
     position: sticky;
     top: 81px;
@@ -521,6 +529,12 @@ const GALLERY_DATA = [
 
 /* ── Gallery lightbox ────────────────────────────────────────── */
 function GalleryLightbox({ work, onClose, onPrev, onNext }) {
+  const closeRef = useRef(null);
+  useEffect(() => {
+    const prev = document.activeElement;
+    closeRef.current?.focus();
+    return () => prev?.focus();
+  }, []);
   useEffect(() => {
     const h = e => {
       if (e.key === 'Escape') onClose();
@@ -532,25 +546,26 @@ function GalleryLightbox({ work, onClose, onPrev, onNext }) {
   }, [onClose, onPrev, onNext]);
 
   return (
-    <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.94)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999,
-    }}>
+    <div role="dialog" aria-modal="true" aria-label={work.title}
+      onClick={onClose} style={{
+        position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.94)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999,
+      }}>
       <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 900, width: '92%' }}>
         <img src={BASE + '/' + work.file} alt={work.title}
           style={{ maxHeight: '78vh', maxWidth: '100%', objectFit: 'contain', display: 'block' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 20, gap: 16 }}>
-          <button onClick={onPrev} style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>←</button>
+          <button onClick={onPrev} aria-label="Previous artwork" style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>←</button>
           <div style={{ textAlign: 'center', flex: 1 }}>
             <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 17, color: '#F5F0E8', marginBottom: 5 }}>{work.title}</div>
             <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
               {work.period} · {work.medium}
             </div>
           </div>
-          <button onClick={onNext} style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>→</button>
+          <button onClick={onNext} aria-label="Next artwork" style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>→</button>
         </div>
       </div>
-      <button onClick={onClose} style={{
+      <button ref={closeRef} onClick={onClose} aria-label="Close lightbox" style={{
         position: 'absolute', top: 24, right: 32,
         background: 'none', border: 'none', color: '#A08060',
         fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
@@ -563,9 +578,12 @@ function GalleryLightbox({ work, onClose, onPrev, onNext }) {
 function GalleryItem({ work, period, defaultMedium, onClick }) {
   const [hov, setHov] = useState(false);
   const src = BASE + '/' + work.file;
+  const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick({ ...work, period, medium: work.medium || defaultMedium }); } };
   return (
-    <div style={{ cursor: 'pointer', minWidth: 0 }}
+    <div role="button" tabIndex={0} aria-label={`View ${work.title}`}
+      style={{ cursor: 'pointer', minWidth: 0 }}
       onClick={() => onClick({ ...work, period, medium: work.medium || defaultMedium })}
+      onKeyDown={handleKey}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{ width: '100%', height: 140, overflow: 'hidden', background: '#EDE7D9' }}>
         <img src={src} alt={work.title}
@@ -598,7 +616,7 @@ function ArtGallery() {
     fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
     background: active ? '#111' : 'transparent',
     color: active ? '#F5F0E8' : '#2A2A2A',
-    border: '1px solid ' + (active ? '#111' : '#C8BCA8'),
+    border: '1px solid ' + (active ? '#111' : '#8A7A6B'),
     padding: '6px 14px', cursor: 'pointer', transition: 'all 200ms',
   });
 
@@ -744,10 +762,17 @@ const SHOWS_DATA = [
 /* ── Show lightbox ───────────────────────────────────────────── */
 function ShowLightbox({ show, onClose }) {
   const [idx, setIdx] = useState(0);
+  const closeRef = useRef(null);
   const photos = [
     ...Array.from({ length: show.photoCount }, (_, i) => `${SHOWS_BASE}/${show.photos}/${i + 1}.jpg`),
     ...(show.flyer ? [`${SHOWS_BASE}/${show.photos}/flyer.jpg`] : []),
   ];
+
+  useEffect(() => {
+    const prev = document.activeElement;
+    closeRef.current?.focus();
+    return () => prev?.focus();
+  }, []);
 
   useEffect(() => {
     const h = e => {
@@ -760,15 +785,17 @@ function ShowLightbox({ show, onClose }) {
   }, [onClose, photos.length]);
 
   return (
-    <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.95)',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 999,
-    }}>
+    <div role="dialog" aria-modal="true" aria-label={`${show.title} — photos`}
+      onClick={onClose} style={{
+        position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.95)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 999,
+      }}>
       <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 900, width: '92%' }}>
-        <img src={photos[idx]} alt={`${show.title} — photo ${idx + 1}`}
+        <img src={photos[idx]} alt={`${show.title} — photo ${idx + 1} of ${photos.length}`}
           style={{ maxHeight: '68vh', maxWidth: '100%', objectFit: 'contain', display: 'block' }} />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 20, gap: 16 }}>
           <button onClick={() => setIdx(i => (i - 1 + photos.length) % photos.length)}
+            aria-label="Previous photo"
             style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', flexShrink: 0, padding: 0 }}>←</button>
           <div style={{ textAlign: 'center', flex: 1 }}>
             <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 17, color: '#F5F0E8', marginBottom: 4 }}>{show.title}</div>
@@ -780,20 +807,30 @@ function ShowLightbox({ show, onClose }) {
             </div>
           </div>
           <button onClick={() => setIdx(i => (i + 1) % photos.length)}
+            aria-label="Next photo"
             style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', flexShrink: 0, padding: 0 }}>→</button>
         </div>
         <div style={{ display: 'flex', gap: 6, marginTop: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
           {photos.map((p, i) => (
-            <div key={i} onClick={() => setIdx(i)} style={{
-              width: 48, height: 48, overflow: 'hidden', cursor: 'pointer',
-              outline: i === idx ? '2px solid #A08060' : '2px solid transparent',
-              transition: 'outline 150ms', flexShrink: 0,
-            }}>
+            <button key={i} onClick={() => setIdx(i)}
+              aria-label={`Photo ${i + 1} of ${photos.length}`}
+              aria-pressed={i === idx}
+              style={{
+                width: 48, height: 48, overflow: 'hidden', cursor: 'pointer',
+                outline: i === idx ? '2px solid #A08060' : '2px solid transparent',
+                transition: 'outline 150ms', flexShrink: 0,
+                background: 'none', border: 'none', padding: 0,
+              }}>
               <img src={p} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-            </div>
+            </button>
           ))}
         </div>
       </div>
+      <button ref={closeRef} onClick={onClose} aria-label="Close photos" style={{
+        position: 'absolute', top: 24, right: 32,
+        background: 'none', border: 'none', color: '#A08060',
+        fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+      }}>✕ Close</button>
     </div>
   );
 }
@@ -829,12 +866,12 @@ function ShowEntry({ show }) {
         {hasMedia && (
           <button onClick={() => setOpen(true)} style={{
             background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif",
-            fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A08060',
+            fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#705C48',
             cursor: 'pointer', padding: 0, textDecoration: 'underline', flexShrink: 0,
           }}>{mediaLabel}</button>
         )}
       </div>
-      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.08em', color: '#9A8B7A' }}>{show.dates}</div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.08em', color: '#6B5C4E' }}>{show.dates}</div>
       {open && <ShowLightbox show={show} onClose={() => setOpen(false)} />}
     </div>
   );
@@ -1033,8 +1070,9 @@ function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <Nav page={page} onNav={onNav} />
-      <main style={{ flex: 1 }}>
+      <main id="main-content" style={{ flex: 1 }}>
         {renderPage()}
       </main>
       <Footer />
