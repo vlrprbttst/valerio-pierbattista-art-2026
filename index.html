@@ -859,11 +859,6 @@ function ArtShows() {
 }
 
 /* ── HomePage ────────────────────────────────────────────────── */
-const FEATURED = [
-  { file: '2013/CIMG4343.jpg', title: 'Self Portrait after that Night', period: '2013', medium: 'Mixed media on paper' },
-  { file: '2007-2010/the-moth-and-the-butterfly.jpg', title: 'The Moth and the Butterfly', period: '2007–2010', medium: 'Mixed media / silkscreen' },
-  { file: '2004/marilyn.jpg', title: 'Marilyn', period: '2004', medium: 'Silkscreen / acrylic' },
-];
 
 function FeaturedCard({ work, onNav }) {
   const [hov, setHov] = useState(false);
@@ -882,6 +877,17 @@ function FeaturedCard({ work, onNav }) {
 }
 
 function HomePage({ onNav }) {
+  const [featured] = useState(() => {
+    const flat = GALLERY_DATA.flatMap(s =>
+      s.works.map(w => ({ file: w.file, title: w.title, period: s.period, medium: w.medium || s.medium }))
+    );
+    for (let i = flat.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [flat[i], flat[j]] = [flat[j], flat[i]];
+    }
+    return flat.slice(0, 3);
+  });
+
   return (
     <div>
       <div style={{ padding: '120px 48px 100px', maxWidth: 960, margin: '0 auto' }} className="hero-pad">
@@ -891,9 +897,20 @@ function HomePage({ onNav }) {
         <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 32px', maxWidth: 700 }}>
           Coming from a past of stencils, silkscreens, pop and street art.
         </h1>
-        <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '0 0 40px' }}>
+        <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '0 0 28px' }}>
           I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
         </p>
+        <div style={{ maxWidth: 480, margin: '0 0 40px' }}>
+          <iframe
+            src="https://www.youtube.com/embed/FE-CzWQeSZU?si=OYIvl9TwjSG3qCAe"
+            title="Valerio Pierbattista"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            style={{ width: '100%', aspectRatio: '16/9', border: 'none', display: 'block' }}
+          />
+        </div>
         <button onClick={() => onNav('gallery')} style={{
           fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
           background: '#111', color: '#F5F0E8', border: 'none', padding: '14px 36px', cursor: 'pointer',
@@ -907,7 +924,7 @@ function HomePage({ onNav }) {
             <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '32px 28px' }} className="three-col">
-            {FEATURED.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
+            {featured.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
           </div>
           <div style={{ marginTop: 40, textAlign: 'right' }}>
             <button onClick={() => onNav('gallery')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111', cursor: 'pointer' }}>
