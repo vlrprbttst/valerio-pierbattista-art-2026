@@ -40,6 +40,7 @@
     .hero-h1 { font-size: 36px !important; }
     .two-col { grid-template-columns: 1fr !important; gap: 40px !important; }
     .three-col { grid-template-columns: 1fr 1fr !important; }
+    .four-col { grid-template-columns: 1fr 1fr !important; }
     .six-col { grid-template-columns: repeat(2, 1fr) !important; }
     .page-pad { padding: 40px 20px !important; }
     .hero-pad { padding: 64px 20px 56px !important; }
@@ -885,7 +886,7 @@ function HomePage({ onNav }) {
       const j = Math.floor(Math.random() * (i + 1));
       [flat[i], flat[j]] = [flat[j], flat[i]];
     }
-    return flat.slice(0, 3);
+    return flat.slice(0, 4);
   });
 
   return (
@@ -900,7 +901,7 @@ function HomePage({ onNav }) {
         <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '0 0 28px' }}>
           I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
         </p>
-        <div style={{ maxWidth: 480, margin: '0 0 40px' }}>
+        <div style={{ margin: '0 0 40px' }}>
           <iframe
             src="https://www.youtube.com/embed/FE-CzWQeSZU?si=OYIvl9TwjSG3qCAe"
             title="Valerio Pierbattista"
@@ -923,7 +924,7 @@ function HomePage({ onNav }) {
             <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap' }}>Selected Works</div>
             <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '32px 28px' }} className="three-col">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '32px 28px' }} className="four-col">
             {featured.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
           </div>
           <div style={{ marginTop: 40, textAlign: 'right' }}>
