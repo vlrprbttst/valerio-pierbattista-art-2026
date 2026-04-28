@@ -800,126 +800,36 @@ function Badge({ type }) {
   );
 }
 
-/* ── Show row ────────────────────────────────────────────────── */
-function ShowRow({ show }) {
-  const [lightbox, setLightbox] = useState(false);
-  return (
-    <>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: 16, alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid #EDE7D9' }} className="shows-grid">
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-          <Badge type={show.type} />
-          <div>
-            <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 15, color: '#111' }}>{show.title}</span>
-            <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#705C48', marginLeft: 10 }}>
-              {show.venue}, {show.city} — {show.country}
-            </span>
-          </div>
-        </div>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.07em', color: '#5F5347', whiteSpace: 'nowrap' }}>{show.dates}</div>
-        {show.photos ? (
-          <button onClick={() => setLightbox(true)} style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: '#705C48', borderBottom: '1px solid #705C48', paddingBottom: 1, whiteSpace: 'nowrap',
-          }}>{show.photoCount} photos →</button>
-        ) : <div />}
-      </div>
-      {lightbox && <ShowLightbox show={show} onClose={() => setLightbox(false)} />}
-    </>
-  );
-}
-
 /* ── ArtShows page ───────────────────────────────────────────── */
 function ArtShows() {
-  const [view, setView] = useState('list');
-  const [typeFilter, setTypeFilter] = useState('all');
-
-  const toggleType = (t) => setTypeFilter(prev => prev === t ? 'all' : t);
-
   return (
     <div style={{ padding: '64px 48px', maxWidth: 880, margin: '0 auto' }} className="page-pad">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
-        <div>
-          <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h1>
-          <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#705C48' }}>
-            Solo and group shows, 2004–2013 · Rome, London, Detroit, Taipei and beyond
+      <div style={{ marginBottom: 48 }}>
+        <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h1>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#705C48' }}>
+          Solo and group shows, 2004–2013 · Rome, London, Detroit, Taipei and beyond
+        </div>
+      </div>
+      <div style={{ position: 'relative', paddingLeft: 32 }}>
+        <div style={{ position: 'absolute', left: 8, top: 8, bottom: 8, width: 1, background: '#C8BCA8' }} />
+        {SHOWS_DATA.map(yg => (
+          <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
+            <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#705C48' }} />
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 10, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10 }}>{yg.year}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {yg.shows.map((show, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+                  <Badge type={show.type} />
+                  <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
+                  <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#5F5347' }}>
+                    {show.venue}, {show.city}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div style={{ display: 'flex', border: '1px solid #C8BCA8' }}>
-          {['list', 'timeline'].map(v => (
-            <button key={v} onClick={() => setView(v)} style={{
-              fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase',
-              background: view === v ? '#111' : 'transparent', color: view === v ? '#F5F0E8' : '#2A2A2A',
-              border: 'none', padding: '8px 18px', cursor: 'pointer', transition: 'all 180ms',
-            }}>{v}</button>
-          ))}
-        </div>
+        ))}
       </div>
-
-      <div style={{ display: 'flex', gap: 8, marginBottom: 40, alignItems: 'center' }}>
-        <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#5F5347', marginRight: 4 }}>Show</span>
-        {['Solo', 'Group'].map(t => {
-          const active = typeFilter === t;
-          return (
-            <button key={t} onClick={() => toggleType(t)} style={{
-              fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase',
-              background: active ? (t === 'Solo' ? '#111' : '#EDE7D9') : 'transparent',
-              color: active ? (t === 'Solo' ? '#F5F0E8' : '#2A2A2A') : '#705C48',
-              border: '1px solid ' + (active ? (t === 'Solo' ? '#111' : '#C8BCA8') : '#C8BCA8'),
-              padding: '5px 14px', cursor: 'pointer', transition: 'all 180ms',
-            }}>{t}{active ? ' ✕' : ''}</button>
-          );
-        })}
-        {typeFilter !== 'all' && (
-          <button onClick={() => setTypeFilter('all')} style={{
-            background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif",
-            fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', cursor: 'pointer', padding: 0,
-          }}>Show all</button>
-        )}
-      </div>
-
-      {view === 'list' ? (
-        <div>
-          {SHOWS_DATA.map(yg => {
-            const filtered = typeFilter === 'all' ? yg.shows : yg.shows.filter(s => s.type === typeFilter);
-            if (filtered.length === 0) return null;
-            return (
-              <div key={yg.year} style={{ marginBottom: 48 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 4 }}>
-                  <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', color: '#705C48', flexShrink: 0 }}>{yg.year}</div>
-                  <div style={{ flex: 1, height: 1, background: '#EDE7D9' }} />
-                </div>
-                {filtered.map((show, i) => <ShowRow key={i} show={show} />)}
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div style={{ position: 'relative', paddingLeft: 32 }}>
-          <div style={{ position: 'absolute', left: 8, top: 8, bottom: 8, width: 1, background: '#C8BCA8' }} />
-          {SHOWS_DATA.map(yg => {
-            const filtered = typeFilter === 'all' ? yg.shows : yg.shows.filter(s => s.type === typeFilter);
-            if (filtered.length === 0) return null;
-            return (
-              <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
-                <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#705C48' }} />
-                <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 10, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10 }}>{yg.year}</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {filtered.map((show, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-                      <Badge type={show.type} />
-                      <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
-                      <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 9, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#5F5347' }}>
-                        {show.venue}, {show.city}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }
