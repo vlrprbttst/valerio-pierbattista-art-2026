@@ -693,9 +693,9 @@ const SHOWS_DATA = [
       { title: 'Solo Show', type: 'Solo', venue: 'MF Gallery', city: 'Genova', country: 'Italy', dates: 'September 17 – October 10, 2010' },
       { title: 'Dirty Show Chicago', type: 'Group', venue: 'Viaduct Theatre', city: 'Chicago', country: 'USA', dates: 'June 25–26, 2010' },
       { title: 'Group Show', type: 'Group', venue: 'Parlor Art Gallery', city: 'New Jersey', country: 'USA', dates: 'May 29 – June 28, 2010' },
-      { title: 'One Night Stand', type: 'Solo', venue: 'Foollyc', city: 'Rome', country: 'Italy', dates: 'February 26, 2010', photos: 'foollyc', photoCount: 0, flyer: true },
+      { title: 'One Night Stand', type: 'Solo', venue: 'Foollyc', city: 'Rome', country: 'Italy', dates: 'February 26, 2010' },
       { title: 'Group Show', type: 'Group', venue: 'Faenas Cafè', city: 'Rome', country: 'Italy', dates: 'February 19–26, 2010', photos: 'faenas', photoCount: 3 },
-      { title: 'Group Show', type: 'Group', venue: "Alice's Cafè", city: 'Rome', country: 'Italy', dates: 'February 11–25, 2010', photos: 'alices', photoCount: 6, flyer: true },
+      { title: 'Group Show', type: 'Group', venue: "Alice's Cafè", city: 'Rome', country: 'Italy', dates: 'February 11–25, 2010', photos: 'alices', photoCount: 6 },
       { title: 'Dirty Show 2010', type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 12–20, 2010' },
     ]
   },
@@ -763,10 +763,7 @@ const SHOWS_DATA = [
 function ShowLightbox({ show, onClose }) {
   const [idx, setIdx] = useState(0);
   const closeRef = useRef(null);
-  const photos = [
-    ...Array.from({ length: show.photoCount }, (_, i) => `${SHOWS_BASE}/${show.photos}/${i + 1}.jpg`),
-    ...(show.flyer ? [`${SHOWS_BASE}/${show.photos}/flyer.jpg`] : []),
-  ];
+  const photos = Array.from({ length: show.photoCount }, (_, i) => `${SHOWS_BASE}/${show.photos}/${i + 1}.jpg`);
 
   useEffect(() => {
     const prev = document.activeElement;
@@ -851,10 +848,8 @@ function Badge({ type }) {
 /* ── Show entry (timeline row with optional photo/flyer trigger) ── */
 function ShowEntry({ show }) {
   const [open, setOpen] = useState(false);
-  const hasMedia = show.photos && (show.photoCount > 0 || show.flyer);
-  const mediaLabel = show.photoCount > 0
-    ? `${show.photoCount} photo${show.photoCount > 1 ? 's' : ''}${show.flyer ? ' + flyer' : ''}`
-    : 'flyer';
+  const hasMedia = show.photos && show.photoCount > 0;
+  const mediaLabel = `${show.photoCount} photo${show.photoCount > 1 ? 's' : ''}`;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
