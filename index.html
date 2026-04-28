@@ -83,7 +83,7 @@ const { useState, useEffect, useRef } = React;
 /* ── Nav ─────────────────────────────────────────────────────── */
 function Nav({ page, onNav }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const links = ['Gallery', 'Exhibitions', 'About', 'Contact'];
+  const links = ['Home', 'Gallery', 'Exhibitions', 'About', 'Contact'];
 
   const handleNav = (dest) => { setMenuOpen(false); onNav(dest); };
 
