@@ -630,8 +630,8 @@ function GalleryItem({ work, period, defaultMedium, onClick }) {
 }
 
 /* ── ArtGallery page ─────────────────────────────────────────── */
-function ArtGallery() {
-  const [activePeriod, setActivePeriod] = useState(null);
+function ArtGallery({ initialPeriod }) {
+  const [activePeriod, setActivePeriod] = useState(initialPeriod || null);
   const [lightbox, setLightbox] = useState(null);
 
   const periods = GALLERY_DATA.map(d => d.period);
@@ -975,10 +975,11 @@ function ArtShows() {
 
 function FeaturedCard({ work, onNav }) {
   const [hov, setHov] = useState(false);
-  const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNav('gallery'); } };
+  const go = () => onNav('gallery', { period: work.period });
+  const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
   return (
     <div role="button" tabIndex={0} aria-label={`View ${work.title} in gallery`}
-      onClick={() => onNav('gallery')} onKeyDown={handleKey}
+      onClick={go} onKeyDown={handleKey}
       style={{ cursor: 'pointer' }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9' }}>
@@ -1118,6 +1119,7 @@ function ContactPage() {
 /* ── App ─────────────────────────────────────────────────────── */
 function App() {
   const [page, setPage] = useState('home');
+  const [navState, setNavState] = useState({});
 
   const PAGE_TITLES = {
     home:        'Valerio Pierbattista — Artist',
@@ -1131,15 +1133,16 @@ function App() {
     document.title = PAGE_TITLES[page] || 'Valerio Pierbattista — Artist';
   }, [page]);
 
-  const onNav = (p) => {
+  const onNav = (p, state = {}) => {
     setPage(p);
+    setNavState(state);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderPage = () => {
     switch (page) {
       case 'home':        return <HomePage onNav={onNav} />;
-      case 'gallery':     return <ArtGallery />;
+      case 'gallery':     return <ArtGallery initialPeriod={navState.period} />;
       case 'exhibitions': return <ArtShows />;
       case 'about':       return <AboutPage />;
       case 'contact':     return <ContactPage />;
