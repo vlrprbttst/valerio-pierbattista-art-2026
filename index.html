@@ -1044,18 +1044,12 @@ function ContactPage() {
 
 /* ── App ─────────────────────────────────────────────────────── */
 function App() {
-  const [page, setPage] = useState(() => {
-    try { return localStorage.getItem('vp-page') || 'home'; } catch { return 'home'; }
-  });
+  const [page, setPage] = useState('home');
 
   const onNav = (p) => {
     setPage(p);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    try { localStorage.setItem('vp-page', page); } catch {}
-  }, [page]);
 
   const renderPage = () => {
     switch (page) {
