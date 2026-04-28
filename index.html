@@ -63,6 +63,7 @@
     .hero-pad { padding: 64px 20px 56px !important; }
     .feat-pad { padding: 48px 20px !important; }
     .footer-inner { flex-direction: column !important; gap: 24px !important; align-items: flex-start !important; }
+    .footer-right { align-items: flex-start !important; }
     .nav-inner { padding: 18px 20px !important; }
     .shows-grid { grid-template-columns: 1fr !important; }
     .gallery-meta { display: none !important; }
@@ -156,7 +157,7 @@ function Footer() {
           Represented in private collections across Europe and the United States.
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }} className="footer-right">
         <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
           Inquiries welcome
         </div>
