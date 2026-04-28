@@ -661,6 +661,14 @@ function ArtGallery() {
 /* ── Exhibitions data ────────────────────────────────────────── */
 const SHOWS_BASE = 'assets/artshows';
 
+/* Add new filenames here when dropping images into assets/images/ (exclude the about/ subfolder) */
+const HOMEPAGE_IMAGES = [
+  'CIMG0256.JPG',
+  'DSCF2796.JPG',
+  'DSCF2809.jpg',
+  'slide3bg-2.jpg',
+];
+
 const SHOWS_DATA = [
   {
     year: 2013,
@@ -925,6 +933,7 @@ function HomePage({ onNav }) {
       return { file: w.file, title: w.title, period: s.period, medium: w.medium || s.medium };
     })
   );
+  const [heroImg] = useState(() => HOMEPAGE_IMAGES[Math.floor(Math.random() * HOMEPAGE_IMAGES.length)]);
 
   return (
     <div>
@@ -973,13 +982,19 @@ function HomePage({ onNav }) {
       </div>
 
       <div style={{ padding: '80px 48px', maxWidth: 960, margin: '0 auto' }}>
-        <blockquote style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 22, lineHeight: 1.7, color: '#705C48', borderLeft: '1px solid #C8BCA8', paddingLeft: 24, margin: 0, maxWidth: 520 }}>
-          "Radically changing his style and communicative intentions, he now draws something more introspective and meaningful."
-        </blockquote>
-        <div style={{ marginTop: 20 }}>
-          <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
-            Get in touch
-          </button>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }} className="two-col">
+          <div>
+            <blockquote style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 22, lineHeight: 1.7, color: '#705C48', borderLeft: '1px solid #C8BCA8', paddingLeft: 24, margin: '0 0 24px' }}>
+              "Radically changing his style and communicative intentions, he now draws something more introspective and meaningful."
+            </blockquote>
+            <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
+              Get in touch
+            </button>
+          </div>
+          <div style={{ overflow: 'hidden', background: '#EDE7D9' }}>
+            <img src={`assets/images/${heroImg}`} alt=""
+              style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
+          </div>
         </div>
       </div>
     </div>
