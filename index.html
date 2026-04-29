@@ -670,6 +670,12 @@ function ArtGallery({ initialPeriod }) {
         })}
       </div>
 
+      {data.length === 0 && (
+        <div role="status" style={{ padding: '80px 0', textAlign: 'center', fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#705C48' }}>
+          No works in this period.
+        </div>
+      )}
+
       {data.map(section => (
         <div key={section.period} style={{ marginBottom: 72 }}>
           <div className="gallery-section-header" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
