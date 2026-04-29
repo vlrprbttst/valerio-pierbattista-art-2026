@@ -93,6 +93,8 @@
     .nav-inner { padding: 18px 20px !important; }
     .shows-grid { grid-template-columns: 1fr !important; }
     .shows-month-label { display: none !important; }
+    .shows-tl-left { width: 20px !important; }
+    .shows-tl-line { left: 10px !important; }
     .gallery-meta { display: none !important; }
     .gallery-works-count { display: none !important; }
     .gallery-section-header { gap: 10px !important; }
@@ -969,11 +971,11 @@ function ArtShows() {
             </div>
 
             <div style={{ position: 'relative' }}>
-              <div style={{ position: 'absolute', left: 75, top: 0, bottom: 0, width: 1, background: '#E0D8CC' }} />
+              <div className="shows-tl-line" style={{ position: 'absolute', left: 75, top: 0, bottom: 0, width: 1, background: '#E0D8CC' }} />
 
               {sorted.map((show, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 14 }}>
-                  <div style={{ width: 80, flexShrink: 0, display: 'flex', alignItems: 'flex-start', paddingTop: 14 }}>
+                  <div className="shows-tl-left" style={{ width: 80, flexShrink: 0, display: 'flex', alignItems: 'flex-start', paddingTop: 14 }}>
                     <span style={{
                       flex: 1, textAlign: 'right', paddingRight: 9,
                       fontFamily: "'Montserrat',sans-serif", fontSize: 9,
