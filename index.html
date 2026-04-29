@@ -92,6 +92,7 @@
     .footer-right { align-items: flex-start !important; }
     .nav-inner { padding: 18px 20px !important; }
     .shows-grid { grid-template-columns: 1fr !important; }
+    .shows-month-label { display: none !important; }
     .gallery-meta { display: none !important; }
     .gallery-works-count { display: none !important; }
     .gallery-section-header { gap: 10px !important; }
@@ -945,28 +946,73 @@ function ShowEntry({ show }) {
 
 /* ── ArtShows page ───────────────────────────────────────────── */
 function ArtShows() {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const getMonthIdx = dates => { for (let i = 0; i < MONTHS.length; i++) if (dates.includes(MONTHS[i])) return i; return 0; };
+  const getMonthShort = dates => MONTHS[getMonthIdx(dates)].slice(0, 3).toUpperCase();
+
   return (
     <div style={{ padding: '64px 48px', maxWidth: 880, margin: '0 auto' }} className="page-pad">
-      <div style={{ marginBottom: 48 }}>
+      <div style={{ marginBottom: 56 }}>
         <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h1>
         <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#705C48' }}>
           Solo and group shows, 2004–2013 · Rome, London, Detroit, Taipei and beyond
         </div>
       </div>
-      <div style={{ position: 'relative', paddingLeft: 32 }}>
-        <div style={{ position: 'absolute', left: 8, top: 8, bottom: 8, width: 1, background: '#C8BCA8' }} />
-        {SHOWS_DATA.map(yg => (
-          <div key={yg.year} style={{ marginBottom: 36, position: 'relative' }}>
-            <div style={{ position: 'absolute', left: -28, top: 3, width: 8, height: 8, background: '#705C48' }} />
-            <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', color: '#705C48', marginBottom: 10, fontWeight: 400 }}>{yg.year}</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {yg.shows.map((show, i) => (
-                <ShowEntry key={i} show={show} />
+
+      {SHOWS_DATA.map(yg => {
+        const sorted = [...yg.shows].sort((a, b) => getMonthIdx(a.dates) - getMonthIdx(b.dates));
+        return (
+          <div key={yg.year} style={{ marginBottom: 64 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+              <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#705C48', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>{yg.year}</h2>
+              <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', left: 75, top: 0, bottom: 0, width: 1, background: '#E0D8CC' }} />
+
+              {sorted.map((show, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 14 }}>
+                  <div style={{ width: 80, flexShrink: 0, display: 'flex', alignItems: 'flex-start', paddingTop: 14 }}>
+                    <span style={{
+                      flex: 1, textAlign: 'right', paddingRight: 9,
+                      fontFamily: "'Montserrat',sans-serif", fontSize: 9,
+                      letterSpacing: '0.14em', textTransform: 'uppercase', color: '#705C48', lineHeight: 1,
+                    }} className="shows-month-label">{getMonthShort(show.dates)}</span>
+                    <div style={{
+                      width: 9, height: 9, borderRadius: '50%', flexShrink: 0,
+                      background: '#F5F0E8', border: '1.5px solid #705C48', position: 'relative', zIndex: 1,
+                    }} />
+                  </div>
+
+                  <div style={{ width: 16, height: 1, background: '#C8BCA8', marginTop: 18, flexShrink: 0 }} />
+
+                  <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      position: 'absolute', left: -9, top: 10,
+                      width: 0, height: 0,
+                      borderTop: '8px solid transparent',
+                      borderBottom: '8px solid transparent',
+                      borderRight: '9px solid rgba(100,80,60,0.13)',
+                      zIndex: 0,
+                    }} />
+                    <div style={{
+                      position: 'absolute', left: -7, top: 12,
+                      width: 0, height: 0,
+                      borderTop: '6px solid transparent',
+                      borderBottom: '6px solid transparent',
+                      borderRight: '7px solid #FFFDF8',
+                      zIndex: 2,
+                    }} />
+                    <div style={{ position: 'relative', zIndex: 1 }}>
+                      <ShowEntry show={show} />
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         ))}
-      </div>
     </div>
   );
 }
