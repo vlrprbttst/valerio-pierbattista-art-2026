@@ -1,0 +1,1167 @@
+﻿import { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+
+
+/* ── Nav ─────────────────────────────────────────────────────── */
+function Nav({ page, onNav }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const links = ['Home', 'Gallery', 'Exhibitions', 'About', 'Contact'];
+
+  const handleNav = (dest) => { setMenuOpen(false); onNav(dest); };
+
+  return (
+    <>
+      <nav style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '22px 48px', borderBottom: '1px solid #C8BCA8',
+        background: '#F5F0E8', position: 'sticky', top: 0, zIndex: 100,
+      }} className="nav-inner">
+        <button onClick={() => handleNav('home')} style={{
+          background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+          fontFamily: "'Montserrat', sans-serif", fontWeight: 300,
+          fontSize: 15, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#111',
+        }}>
+          Valerio<br/>Pierbattista
+        </button>
+        <div style={{ display: 'flex', gap: 36 }} className="nav-links">
+          {links.map(l => (
+            <button key={l} onClick={() => handleNav(l.toLowerCase())}
+              aria-current={page === l.toLowerCase() ? 'page' : undefined}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                fontFamily: "'Montserrat', sans-serif", fontSize: 11,
+                letterSpacing: '0.18em', textTransform: 'uppercase',
+                color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
+                transition: 'color 250ms',
+              }}>{l}</button>
+          ))}
+        </div>
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{
+            background: 'none', border: 'none', cursor: 'pointer', padding: 4,
+            color: '#111', fontSize: 20, lineHeight: 1,
+          }}
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+          aria-controls="nav-mobile-menu"
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+      </nav>
+      <div id="nav-mobile-menu" className={'nav-mobile-menu' + (menuOpen ? '' : ' closed')} aria-hidden={!menuOpen}>
+        {links.map((l, i) => (
+          <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '18px 0',
+            borderBottom: i < links.length - 1 ? '1px solid #333' : 'none',
+            fontFamily: "'Montserrat', sans-serif", fontSize: 13,
+            letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: page === l.toLowerCase() ? '#A08060' : '#F5F0E8',
+            textAlign: 'left', width: '100%',
+          }}>{l}</button>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+function Footer() {
+  return (
+    <footer id="site-footer" style={{
+      borderTop: '1px solid #C8BCA8', padding: '40px 48px',
+      background: '#F5F0E8', marginTop: 96,
+      display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+    }} className="footer-inner">
+      <div>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#111', marginBottom: 6 }}>
+          Valerio Pierbattista
+        </div>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48' }}>
+          Represented in private collections across Europe and the United States.
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }} className="footer-right">
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
+          Inquiries welcome
+        </div>
+        <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48', textDecoration: 'none' }}>
+          omegaiori@gmail.com
+        </a>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', marginTop: 10 }}>
+          © 2026 Valerio Pierbattista
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── Gallery data ────────────────────────────────────────────── */
+const BASE = 'assets/artgallery';
+
+const GALLERY_DATA = [
+  {
+    period: '2011–2013',
+    medium: 'Mixed media on paper',
+    works: [
+      { id: '2013-0', file: '2013/CIMG4343.jpg', title: 'Self Portrait after that Night' },
+      { id: '2013-1', file: '2013/CIMG4346.jpg', title: 'Lorraine' },
+      { id: '2013-2', file: '2013/CIMG4347.jpg', title: 'Gone' },
+      { id: '2013-3', file: '2013/CIMG4350.jpg', title: 'Doppel Herz' },
+      { id: '2013-4', file: '2013/Senza-titolo-1.jpg', title: '15/8/12' },
+      { id: '2012-0', file: '2012/CIMG4306.jpg', title: 'I dressed you in her clothes' },
+      { id: '2012-1', file: '2012/CIMG4307.jpg', title: 'These Two Months' },
+      { id: '2012-2', file: '2012/CIMG4308.jpg', title: 'Singes' },
+      { id: '2012-3', file: '2012/CIMG4310.jpg', title: 'You may be beautiful inside/outside but…' },
+      { id: '2012-4', file: '2012/CIMG4316.jpg', title: 'Ad maiora!' },
+      { id: '2012-5', file: '2012/CIMG4317.jpg', title: 'Wears one mask (at a time…)' },
+      { id: '2012-6', file: '2012/CIMG4320.jpg', title: 'The more I think about it' },
+      { id: '2012-7', file: '2012/CIMG4321.jpg', title: 'Smile' },
+      { id: '2012-8', file: '2012/CIMG4322.jpg', title: 'I could' },
+      { id: '2012-9', file: '2012/CIMG4323.jpg', title: 'May I Say?' },
+      { id: '2012-10', file: '2012/CIMG4324.jpg', title: 'Caduceus' },
+      { id: '2012-11', file: '2012/CIMG4325.jpg', title: 'Still searching for you', medium: 'Pen on paper' },
+      { id: '2012-12', file: '2012/20120117181958_002.jpg', title: "That's When You Drew the Line" },
+      { id: '2012-13', file: '2012/20120117181958_007.jpg', title: 'Amy' },
+      { id: '2012-14', file: '2012/20120117181958_015.jpg', title: 'The Downward Spiral of Thinking (and back)' },
+      { id: '2012-15', file: '2012/CIMG3426.jpg', title: 'December 2011' },
+      { id: '2012-16', file: '2012/CIMG3427.jpg', title: 'Read Between the Lines' },
+      { id: '2012-17', file: '2012/CIMG3428.jpg', title: 'Self Portrait' },
+      { id: '2011-0', file: '2011/20110128120558_002.jpg', title: 'Blue Sky Research' },
+      { id: '2011-1', file: '2011/20110128120558_003.jpg', title: 'Dorme, Dorme Sempre…' },
+      { id: '2011-2', file: '2011/20110128120558_004.jpg', title: "It's just a Broken Heart Son…" },
+      { id: '2011-3', file: '2011/20110128120558_005.jpg', title: 'Snakes' },
+      { id: '2011-4', file: '2011/20110128120558_006.jpg', title: 'Draw like a child' },
+      { id: '2011-5', file: '2011/20110128120558_007.jpg', title: 'Modulo Importante' },
+      { id: '2011-6', file: '2011/20110128120828_001.jpg', title: 'Brothers' },
+      { id: '2011-7', file: '2011/20110128120828_002.jpg', title: 'As the world grows colder' },
+      { id: '2011-8', file: '2011/20110128120828_003.jpg', title: 'The Black Flower' },
+      { id: '2011-9', file: '2011/20110128120828_004.jpg', title: 'Emaciato' },
+      { id: '2011-10', file: '2011/20110128120828_005.jpg', title: 'La Fleur du Mal' },
+      { id: '2011-11', file: '2011/20110128120828_007.jpg', title: 'Cage' },
+      { id: '2011-12', file: '2011/20110128120828_008.jpg', title: 'Black' },
+      { id: '2011-13', file: '2011/20110128122529_002.jpg', title: "L'incomprensione è alla base" },
+      { id: '2011-14', file: '2011/20110128122529_003.jpg', title: 'Beware' },
+      { id: '2011-15', file: '2011/20110128122529_004.jpg', title: 'Brother' },
+      { id: '2011-16', file: '2011/20110128122529_005.jpg', title: 'Birdie' },
+      { id: '2011-17', file: '2011/20110128123245_001.jpg', title: 'Untitled' },
+      { id: '2011-18', file: '2011/20110128123245_005.jpg', title: 'Cherish the good (when available)', medium: 'Mixed media on paper · 21×29.7 cm' },
+      { id: '2011-19', file: '2011/20110128123245_006.jpg', title: 'Avevamo promesso di non incolparci più a vicenda', medium: 'Mixed media on paper · 21×29.7 cm' },
+      { id: '2011-20', file: '2011/20110128123245_008.jpg', title: 'Lost' },
+      { id: '2011-21', file: '2011/20110217114504_001.jpg', title: 'Untitled' },
+      { id: '2011-22', file: '2011/20110217114504_002.jpg', title: 'Self Portrait' },
+      { id: '2011-23', file: '2011/20110217114504_003.jpg', title: 'Killer II' },
+      { id: '2011-24', file: '2011/20110217114504_005.jpg', title: "Don't take my baby away" },
+      { id: '2011-25', file: '2011/20110217114504_006.jpg', title: 'Referti referti' },
+      { id: '2011-26', file: '2011/20110217114504_007.jpg', title: 'The Generous' },
+      { id: '2011-27', file: '2011/20110217114504_009.jpg', title: 'Killer' },
+      { id: '2011-28', file: '2011/20110223113036_002.jpg', title: 'Previsione Metereologica Confortante' },
+      { id: '2011-29', file: '2011/20110223113036_003.jpg', title: 'Giving Up' },
+      { id: '2011-30', file: '2011/20110223113036_004.jpg', title: "L'Eterno Indeciso" },
+      { id: '2011-31', file: '2011/20110223113036_006.jpg', title: 'Psychosocial' },
+      { id: '2011-32', file: '2011/20110223113036_007.jpg', title: 'Confuso' },
+      { id: '2011-33', file: '2011/20110223113036_009.jpg', title: 'Happy' },
+      { id: '2011-34', file: '2011/20110315162532_008.jpg', title: 'We just left…' },
+      { id: '2011-35', file: '2011/20110315162532_009.jpg', title: 'Autobus' },
+      { id: '2011-36', file: '2011/20110315162532_015.jpg', title: 'Monster' },
+      { id: '2011-37', file: '2011/20110315162532_016.jpg', title: 'Saremo io e te, col diavolo 3' },
+      { id: '2011-38', file: '2011/20110315162532_017.jpg', title: 'A Story' },
+      { id: '2011-39', file: '2011/20110315162532_020.jpg', title: 'Mirror' },
+      { id: '2011-40', file: '2011/20110329144552_001.jpg', title: 'Anniversary' },
+      { id: '2011-41', file: '2011/20110329144552_003.jpg', title: 'Abstract (Red)' },
+      { id: '2011-42', file: '2011/20110329144552_004.jpg', title: 'Sasha Grey' },
+      { id: '2011-43', file: '2011/20110329144552_005.jpg', title: 'Mars' },
+      { id: '2011-44', file: '2011/20110329144552_006.jpg', title: 'Portrait of Albert Fish' },
+      { id: '2011-45', file: '2011/20110329144552_007.jpg', title: 'Forgiving' },
+      { id: '2011-46', file: '2011/20110329144552_008.jpg', title: 'Abstract (White)' },
+      { id: '2011-47', file: '2011/20110329144552_010.jpg', title: 'Forgiving II' },
+      { id: '2011-48', file: '2011/20110329144552_011.jpg', title: 'Growing Wings (Metamorphosis)' },
+      { id: '2011-49', file: '2011/20110523123829_001.jpg', title: 'Taxi 2' },
+      { id: '2011-50', file: '2011/20110523123829_002.jpg', title: 'Thinking of You' },
+      { id: '2011-51', file: '2011/20110523123829_003.jpg', title: "I Can't Paint if I'm Happy" },
+      { id: '2011-52', file: '2011/20110523123829_005.jpg', title: 'Kiss me' },
+      { id: '2011-53', file: '2011/20110523123829_006.jpg', title: 'Farfalle' },
+      { id: '2011-54', file: '2011/20110523123829_008.jpg', title: 'Sleep' },
+      { id: '2011-55', file: '2011/20110523123829_009.jpg', title: 'Terremoto' },
+      { id: '2011-56', file: '2011/20110523123829_010.jpg', title: 'Waiting for an Answer That Will Never Come' },
+      { id: '2011-57', file: '2011/20110523123829_011.jpg', title: 'Jesus Christ' },
+      { id: '2011-58', file: '2011/20110523123829_012.jpg', title: 'The Thinker' },
+      { id: '2011-59', file: '2011/20110523123829_013.jpg', title: 'Untitled' },
+      { id: '2011-60', file: '2011/20110523123829_014.jpg', title: 'Taxi' },
+      { id: '2011-61', file: '2011/Untitled-1.jpg', title: 'Untitled 1' },
+      { id: '2011-62', file: '2011/20110128120828_006.jpg', title: 'Untitled' },
+      { id: '2011-63', file: '2011/20110128120828_009.jpg', title: 'Untitled' },
+      { id: '2011-64', file: '2011/20110128120828_010.jpg', title: 'Untitled' },
+      { id: '2011-78', file: '2011/20110128120828_012.jpg', title: 'Untitled' },
+      { id: '2011-65', file: '2011/20110128123245_002.jpg', title: 'Ti Vanti di Grandi Meriti' },
+      { id: '2011-66', file: '2011/20110128123245_003.jpg', title: 'Untitled' },
+      { id: '2011-67', file: '2011/20110128123245_004.jpg', title: 'Untitled' },
+      { id: '2011-68', file: '2011/20110128123245_007.jpg', title: 'Untitled' },
+      { id: '2011-69', file: '2011/20110217114504_004.jpg', title: 'Untitled' },
+      { id: '2011-70', file: '2011/20110217114504_008.jpg', title: 'Balla su sto cazzo' },
+      { id: '2011-71', file: '2011/20110217114504_010.jpg', title: 'Untitled' },
+      { id: '2011-72', file: '2011/20110223113036_008.jpg', title: 'Untitled' },
+      { id: '2011-73', file: '2011/20110315162532_001.jpg', title: 'Untitled' },
+      { id: '2011-74', file: '2011/20110315162532_002.jpg', title: 'Untitled' },
+      { id: '2011-75', file: '2011/20110315162532_003.jpg', title: 'Untitled' },
+      { id: '2011-76', file: '2011/20110315162532_0081.jpg', title: "All'improvviso" },
+      { id: '2011-77', file: '2011/20110315162532_013.jpg', title: 'Untitled' },
+    ]
+  },
+  {
+    period: '2007–2010',
+    medium: 'Mixed media / silkscreen',
+    works: [
+      { id: '2007-2010-0', file: '2007-2010/atleast.jpg', title: 'Atleast' },
+      { id: '2007-2010-1', file: '2007-2010/babysleep.jpg', title: 'Babysleep' },
+      { id: '2007-2010-2', file: '2007-2010/bbking.jpg', title: 'BB King' },
+      { id: '2007-2010-3', file: '2007-2010/bertrand.jpg', title: 'Bertrand' },
+      { id: '2007-2010-4', file: '2007-2010/bimbociccio.jpg', title: 'Bimbociccio' },
+      { id: '2007-2010-5', file: '2007-2010/bobdylan.jpg', title: 'Bob Dylan' },
+      { id: '2007-2010-6', file: '2007-2010/breastshot.jpg', title: 'Breastshot' },
+      { id: '2007-2010-7', file: '2007-2010/britney.jpg', title: 'Britney' },
+      { id: '2007-2010-8', file: '2007-2010/holmes.jpg', title: 'Holmes' },
+      { id: '2007-2010-9', file: '2007-2010/kevorkian.jpg', title: 'Kevorkian' },
+      { id: '2007-2010-10', file: '2007-2010/lennon.jpg', title: 'Lennon' },
+      { id: '2007-2010-11', file: '2007-2010/lizz.jpg', title: 'Lizz' },
+      { id: '2007-2010-12', file: '2007-2010/malcolmz.jpg', title: 'Malcolm Z' },
+      { id: '2007-2010-13', file: '2007-2010/manson.jpg', title: 'Manson' },
+      { id: '2007-2010-14', file: '2007-2010/markchapman.jpg', title: 'Mark Chapman' },
+      { id: '2007-2010-15', file: '2007-2010/miao.jpg', title: 'Miao' },
+      { id: '2007-2010-16', file: '2007-2010/mona.jpg', title: 'Mona' },
+      { id: '2007-2010-17', file: '2007-2010/moro001.jpg', title: 'Moro' },
+      { id: '2007-2010-18', file: '2007-2010/myspacemakesme.jpg', title: 'Myspace Makes Me' },
+      { id: '2007-2010-19', file: '2007-2010/overwhelmedbig.jpg', title: 'Overwhelmed' },
+      { id: '2007-2010-20', file: '2007-2010/skeletal.jpg', title: 'Skeletal' },
+      { id: '2007-2010-21', file: '2007-2010/skull.jpg', title: 'Skull' },
+      { id: '2007-2010-22', file: '2007-2010/the-moth-and-the-butterfly.jpg', title: 'The Moth and the Butterfly' },
+      { id: '2007-2010-23', file: '2007-2010/truelove.jpg', title: 'True Love' },
+      { id: '2007-2010-24', file: '2007-2010/tyson.jpg', title: 'Tyson' },
+      { id: '2007-2010-25', file: '2007-2010/undertheveilof.jpg', title: 'Under the Veil Of' },
+      { id: '2007-2010-26', file: '2007-2010/valerio_pierbattista.jpg', title: 'Self Portrait' },
+      { id: '2007-2010-27', file: '2007-2010/what.jpg', title: 'What' },
+      { id: '2007-2010-28', file: '2007-2010/white_demon_sexghost.jpg', title: 'White Demon Sexghost' },
+      { id: '2007-2010-29', file: '2007-2010/youwontsurvivetheurbandecay.jpg', title: "You Won't Survive the Urban Decay" },
+      { id: '2007-2010-30', file: '2007-2010/DSCF1713.jpg', title: 'Study' },
+      { id: '2007-2010-31', file: '2007-2010/Immagine-001.jpg', title: 'Immagine I' },
+      { id: '2007-2010-32', file: '2007-2010/Immagine-002.jpg', title: 'Immagine II' },
+      { id: '2007-2010-33', file: '2007-2010/Immagine-003.jpg', title: 'Immagine III' },
+      { id: '2007-2010-34', file: '2007-2010/Immagine-004.jpg', title: 'Immagine IV' },
+      { id: '2007-2010-35', file: '2007-2010/Immagine-005.jpg', title: 'Immagine V' },
+      { id: '2007-2010-36', file: '2007-2010/Immagine-008.jpg', title: 'Immagine VIII' },
+      { id: '2007-2010-37', file: '2007-2010/Immagine-009.jpg', title: 'Immagine IX' },
+      { id: '2007-2010-38', file: '2007-2010/Immagine-011.jpg', title: 'Immagine XI' },
+      { id: '2007-2010-39', file: '2007-2010/Immagine-017.jpg', title: 'Immagine XVII' },
+      { id: '2007-2010-40', file: '2007-2010/Immagine-018.jpg', title: 'Immagine XVIII' },
+      { id: '2007-2010-41', file: '2007-2010/Immagine-019.jpg', title: 'Immagine XIX' },
+      { id: '2007-2010-42', file: '2007-2010/Immagine-020.jpg', title: 'Immagine XX' },
+      { id: '2007-2010-43', file: '2007-2010/Immagine-021.jpg', title: 'Immagine XXI' },
+      { id: '2007-2010-44', file: '2007-2010/Immagine-022.jpg', title: 'Immagine XXII' },
+      { id: '2007-2010-45', file: '2007-2010/Immagine-023.jpg', title: 'Immagine XXIII' },
+      { id: '2007-2010-46', file: '2007-2010/Immagine-024.jpg', title: 'Immagine XXIV' },
+      { id: '2007-2010-47', file: '2007-2010/Immaginex-006-copy.jpg', title: 'Immagine Study VI' },
+      { id: '2007-2010-48', file: '2007-2010/Immaginex-008-copy.jpg', title: 'Immagine Study VIII' },
+      { id: '2007-2010-49', file: '2007-2010/Immaginex-009-copy.jpg', title: 'Immagine Study IX' },
+      { id: '2007-2010-50', file: '2007-2010/Immaginex-010-copy.jpg', title: 'Immagine Study X' },
+      { id: '2007-2010-51', file: '2007-2010/Untieeeeeetled-1.jpg', title: 'Untitled' },
+      { id: '2007-2010-52', file: '2007-2010/Untitled-7.jpg', title: 'Untitled VII' },
+      { id: '2007-2010-53', file: '2007-2010/asdasdasd-013-copy.jpg', title: 'Untitled XIII' },
+      { id: '2007-2010-54', file: '2007-2010/atleastcolored.jpg', title: 'Atleast (Colored)' },
+      { id: '2007-2010-55', file: '2007-2010/img-001-copy.jpg', title: 'Image I (Study)' },
+      { id: '2007-2010-56', file: '2007-2010/img-002-copy.jpg', title: 'Image II (Study)' },
+      { id: '2007-2010-57', file: '2007-2010/img-002.jpg', title: 'Image II' },
+      { id: '2007-2010-58', file: '2007-2010/img-003-copy.jpg', title: 'Image III (Study)' },
+      { id: '2007-2010-59', file: '2007-2010/img-004-copy.jpg', title: 'Image IV (Study)' },
+      { id: '2007-2010-60', file: '2007-2010/img-004.jpg', title: 'Image IV' },
+      { id: '2007-2010-61', file: '2007-2010/img-008.jpg', title: 'Image VIII' },
+      { id: '2007-2010-62', file: '2007-2010/img-010.jpg', title: 'Image X' },
+      { id: '2007-2010-63', file: '2007-2010/jack-002-copy.jpg', title: 'Jack II (Study)' },
+      { id: '2007-2010-64', file: '2007-2010/marsh-001.jpg', title: 'Marsh' },
+      { id: '2007-2010-65', file: '2007-2010/neo343dx-001-copy.jpg', title: 'Neo Study I' },
+      { id: '2007-2010-66', file: '2007-2010/neo343dx-002-copy.jpg', title: 'Neo Study II' },
+      { id: '2007-2010-67', file: '2007-2010/neo343dx-003-copy.jpg', title: 'Neo Study III' },
+      { id: '2007-2010-68', file: '2007-2010/opera_valerio-pierbattista_untitled.jpg', title: 'Opera' },
+      { id: '2007-2010-69', file: '2007-2010/supercock.jpg', title: 'Supercock' },
+      { id: '2007-2010-70', file: '2007-2010/theinvasionoftheultrascreaminghoes.jpg', title: 'The Invasion of the Ultra-Screaming Hoes' },
+      { id: '2007-2010-71', file: '2007-2010/wehire009.jpg', title: 'We Hire' },
+      { id: '2007-2010-72', file: '2007-2010/whatup.jpg', title: 'What Up' },
+    ]
+  },
+  {
+    period: '2005–2006',
+    medium: 'Stencil and mixed media',
+    works: [
+      { id: '2005-2006-0', file: '2005-2006/accademic.jpg', title: 'Academic' },
+      { id: '2005-2006-1', file: '2005-2006/annefrank.jpg', title: 'Anne Frank' },
+      { id: '2005-2006-2', file: '2005-2006/annie.jpg', title: 'Annie' },
+      { id: '2005-2006-3', file: '2005-2006/bang.jpg', title: 'Bang' },
+      { id: '2005-2006-4', file: '2005-2006/berko.jpg', title: 'Berko' },
+      { id: '2005-2006-5', file: '2005-2006/blackpainting.jpg', title: 'Black Painting' },
+      { id: '2005-2006-6', file: '2005-2006/blowjob.jpg', title: 'Blowjob' },
+      { id: '2005-2006-7', file: '2005-2006/brainblue.jpg', title: 'Brain Blue' },
+      { id: '2005-2006-8', file: '2005-2006/business.jpg', title: 'Business' },
+      { id: '2005-2006-9', file: '2005-2006/cafiero.jpg', title: 'Cafiero' },
+      { id: '2005-2006-10', file: '2005-2006/charles3.jpg', title: 'Charles' },
+      { id: '2005-2006-11', file: '2005-2006/chicken.jpg', title: 'Chicken' },
+      { id: '2005-2006-12', file: '2005-2006/chinaboy.jpg', title: 'China Boy' },
+      { id: '2005-2006-13', file: '2005-2006/clark.jpg', title: 'Clark' },
+      { id: '2005-2006-14', file: '2005-2006/dealer.jpg', title: 'Dealer' },
+      { id: '2005-2006-15', file: '2005-2006/fonzie.jpg', title: 'Fonzie' },
+      { id: '2005-2006-16', file: '2005-2006/gaykissx.jpg', title: 'Gay Kiss' },
+      { id: '2005-2006-17', file: '2005-2006/giocola.jpg', title: 'Giocola' },
+      { id: '2005-2006-18', file: '2005-2006/greenblow.jpg', title: 'Green Blow' },
+      { id: '2005-2006-19', file: '2005-2006/happyfamilyboys.jpg', title: 'Happy Family Boys' },
+      { id: '2005-2006-20', file: '2005-2006/headshotnjnj.jpg', title: 'Headshot' },
+      { id: '2005-2006-21', file: '2005-2006/kevorkian.jpg', title: 'Kevorkian' },
+      { id: '2005-2006-22', file: '2005-2006/kiss.jpg', title: 'Kiss' },
+      { id: '2005-2006-23', file: '2005-2006/knowurenemy.jpg', title: 'Know Your Enemy' },
+      { id: '2005-2006-24', file: '2005-2006/loveisalie.jpg', title: 'Love is a Lie' },
+      { id: '2005-2006-25', file: '2005-2006/loveyou.jpg', title: 'Love You' },
+      { id: '2005-2006-26', file: '2005-2006/madonna.jpg', title: 'Madonna' },
+      { id: '2005-2006-27', file: '2005-2006/manson.jpg', title: 'Manson' },
+      { id: '2005-2006-28', file: '2005-2006/mengele.jpg', title: 'Mengele' },
+      { id: '2005-2006-29', file: '2005-2006/missing.jpg', title: 'Missing' },
+      { id: '2005-2006-30', file: '2005-2006/monti.jpg', title: 'Monti' },
+      { id: '2005-2006-31', file: '2005-2006/overwhelmedbig.jpg', title: 'Overwhelmed' },
+      { id: '2005-2006-32', file: '2005-2006/papa.jpg', title: 'Papa' },
+      { id: '2005-2006-33', file: '2005-2006/parisriot.jpg', title: 'Paris Riot' },
+      { id: '2005-2006-34', file: '2005-2006/pneumonia.jpg', title: 'Pneumonia' },
+      { id: '2005-2006-35', file: '2005-2006/putyourhands2.jpg', title: 'Put Your Hands Up' },
+      { id: '2005-2006-36', file: '2005-2006/riveraaa.jpg', title: 'Rivera' },
+      { id: '2005-2006-37', file: '2005-2006/selfportrait.jpg', title: 'Self Portrait' },
+      { id: '2005-2006-38', file: '2005-2006/soldiervarious.jpg', title: 'Soldier Various' },
+      { id: '2005-2006-39', file: '2005-2006/sunbathjesus.jpg', title: 'Sunbath Jesus' },
+      { id: '2005-2006-40', file: '2005-2006/truelove.jpg', title: 'True Love' },
+      { id: '2005-2006-41', file: '2005-2006/tsunamiii.jpg', title: 'Tsunami' },
+      { id: '2005-2006-42', file: '2005-2006/twowomen.jpg', title: 'Two Women' },
+      { id: '2005-2006-43', file: '2005-2006/unknown.jpg', title: 'Unknown' },
+      { id: '2005-2006-44', file: '2005-2006/untitledrose.jpg', title: 'Untitled Rose' },
+      { id: '2005-2006-45', file: '2005-2006/valeriesola.jpg', title: 'Valerie Sola' },
+      { id: '2005-2006-46', file: '2005-2006/vienrose.jpg', title: 'Vien Rose' },
+      { id: '2005-2006-47', file: '2005-2006/warenglishhumour.jpg', title: 'War English Humour' },
+      { id: '2005-2006-48', file: '2005-2006/womenhavingsex_colored.jpg', title: 'Women Having Sex (Colored)' },
+      { id: '2005-2006-49', file: '2005-2006/brated.jpg', title: 'Brated' },
+      { id: '2005-2006-50', file: '2005-2006/business2.jpg', title: 'Business II' },
+      { id: '2005-2006-51', file: '2005-2006/DSCN3497bhbhj.jpg', title: 'Untitled' },
+      { id: '2005-2006-52', file: '2005-2006/DSCN3511.jpg', title: 'Untitled' },
+      { id: '2005-2006-53', file: '2005-2006/DSCN3513.jpg', title: 'Untitled' },
+      { id: '2005-2006-54', file: '2005-2006/DSCN3521 copy.jpg', title: 'Untitled' },
+      { id: '2005-2006-55', file: '2005-2006/DSCN3522.jpg', title: 'Untitled' },
+      { id: '2005-2006-56', file: '2005-2006/DSCN3537.jpg', title: 'Untitled' },
+      { id: '2005-2006-57', file: '2005-2006/DSCN3589.jpg', title: 'Untitled' },
+      { id: '2005-2006-58', file: '2005-2006/DSCN4460.jpg', title: 'Untitled' },
+      { id: '2005-2006-59', file: '2005-2006/kissbig.jpg', title: 'Kiss (Study)' },
+      { id: '2005-2006-60', file: '2005-2006/poor2.jpg', title: 'Poor II' },
+    ]
+  },
+  {
+    period: '2004',
+    medium: 'Watercolor',
+    works: [
+      { id: '2004-0', file: '2004/albinotyson.jpg', title: 'Albino Tyson' },
+      { id: '2004-1', file: '2004/andywarhol.jpg', title: 'Andy Warhol' },
+      { id: '2004-2', file: '2004/anorexichic.jpg', title: 'Anorexia Chic' },
+      { id: '2004-3', file: '2004/appendix.jpg', title: 'Appendix' },
+      { id: '2004-4', file: '2004/aproposdusex.JPG', title: 'À propos du Sex' },
+      { id: '2004-5', file: '2004/arafart.jpg', title: 'Arafart' },
+      { id: '2004-6', file: '2004/average.jpg', title: 'Average' },
+      { id: '2004-7', file: '2004/beauty.jpg', title: 'Beauty' },
+      { id: '2004-8', file: '2004/betty.jpg', title: 'Betty' },
+      { id: '2004-9', file: '2004/blowjob.jpg', title: 'Blowjob' },
+      { id: '2004-10', file: '2004/brando.JPG', title: 'Brando' },
+      { id: '2004-11', file: '2004/captainamerica.jpg', title: 'Captain America' },
+      { id: '2004-12', file: '2004/charliemanson.jpg', title: 'Charlie Manson' },
+      { id: '2004-13', file: '2004/clowparty.jpg', title: 'Clown Party' },
+      { id: '2004-14', file: '2004/cosby.jpg', title: 'Cosby' },
+      { id: '2004-15', file: '2004/dalinianrasposy.jpg', title: 'Dalinian Rasposy' },
+      { id: '2004-16', file: '2004/danceuse.jpg', title: 'Danseuse' },
+      { id: '2004-17', file: '2004/deadbaldman.jpg', title: 'Dead Bald Man' },
+      { id: '2004-18', file: '2004/deadnature.jpg', title: 'Dead Nature' },
+      { id: '2004-19', file: '2004/devon.jpg', title: 'Devon' },
+      { id: '2004-20', file: '2004/dita.jpg', title: 'Dita' },
+      { id: '2004-21', file: '2004/doppeld.jpg', title: 'Doppelgänger' },
+      { id: '2004-22', file: '2004/doyoumind.jpg', title: 'Do You Mind?' },
+      { id: '2004-23', file: '2004/dracula.jpg', title: 'Dracula' },
+      { id: '2004-24', file: '2004/educateur.jpg', title: "L'Éducateur" },
+      { id: '2004-25', file: '2004/eraseread.jpg', title: 'Erase/Read' },
+      { id: '2004-26', file: '2004/eyesurgery.jpg', title: 'Eye Surgery' },
+      { id: '2004-27', file: '2004/fat.jpg', title: 'Fat' },
+      { id: '2004-28', file: '2004/feuer.jpg', title: 'Feuer' },
+      { id: '2004-29', file: '2004/fontana.jpg', title: 'Fontana' },
+      { id: '2004-30', file: '2004/gatesbill.jpg', title: 'Bill Gates' },
+      { id: '2004-31', file: '2004/gidgetgein.jpg', title: 'Gidget Gein' },
+      { id: '2004-32', file: '2004/giffordredcross.jpg', title: 'Gifford Red Cross' },
+      { id: '2004-33', file: '2004/godisasniper.jpg', title: 'God is a Sniper' },
+      { id: '2004-34', file: '2004/hitlerrepents.jpg', title: 'Hitler Repents' },
+      { id: '2004-35', file: '2004/homageauxfumeurs.jpg', title: 'Hommage aux Fumeurs' },
+      { id: '2004-36', file: '2004/hommefemme.jpg', title: 'Homme / Femme' },
+      { id: '2004-37', file: '2004/jack.jpg', title: 'Jack' },
+      { id: '2004-38', file: '2004/jesus.jpg', title: 'Jesus' },
+      { id: '2004-39', file: '2004/jfkaintonlyanairport.jpg', title: "JFK Ain't Only an Airport" },
+      { id: '2004-40', file: '2004/jimroot.jpg', title: 'Jim Root' },
+      { id: '2004-41', file: '2004/joedale.jpg', title: 'Joe Dale' },
+      { id: '2004-42', file: '2004/kerrychicken.jpg', title: 'Kerry Chicken' },
+      { id: '2004-43', file: '2004/lambhead.jpg', title: 'Lamb Head' },
+      { id: '2004-44', file: '2004/larevomarx.jpg', title: 'La Révo Marx' },
+      { id: '2004-45', file: '2004/lavey.jpg', title: 'LaVey' },
+      { id: '2004-46', file: '2004/lemalade.JPG', title: 'Le Malade' },
+      { id: '2004-47', file: '2004/lenin.jpg', title: 'Lenin' },
+      { id: '2004-48', file: '2004/leninomegaior.jpg', title: 'Lenin / Omega Ior' },
+      { id: '2004-49', file: '2004/lily.jpg', title: 'Lily' },
+      { id: '2004-50', file: '2004/lizzieborden.jpg', title: 'Lizzie Borden' },
+      { id: '2004-51', file: '2004/lorenab.jpg', title: 'Lorena B.' },
+      { id: '2004-52', file: '2004/malcom.jpg', title: 'Malcolm' },
+      { id: '2004-53', file: '2004/manuelaruda.jpg', title: 'Manuel Aruda' },
+      { id: '2004-54', file: '2004/mao.jpg', title: 'Mao' },
+      { id: '2004-55', file: '2004/marilyn.jpg', title: 'Marilyn' },
+      { id: '2004-56', file: '2004/mcdonaldsgirl.jpg', title: "McDonald's Girl" },
+      { id: '2004-57', file: '2004/mephistophelio.JPG', title: 'Mephistophelio' },
+      { id: '2004-58', file: '2004/mickeymouse.jpg', title: 'Mickey Mouse' },
+      { id: '2004-59', file: '2004/mussolini.jpg', title: 'Mussolini' },
+      { id: '2004-60', file: '2004/nicocalux.jpg', title: 'Nico Calux' },
+      { id: '2004-61', file: '2004/nicole.jpg', title: 'Nicole' },
+      { id: '2004-62', file: '2004/nietzsche.jpg', title: 'Nietzsche' },
+      { id: '2004-63', file: '2004/ohgodimamazed.jpg', title: "Oh God I'm Amazed" },
+      { id: '2004-64', file: '2004/pam.jpg', title: 'Pam' },
+      { id: '2004-65', file: '2004/parishilton.JPG', title: 'Paris Hilton' },
+      { id: '2004-66', file: '2004/purplehitler.jpg', title: 'Purple Hitler' },
+      { id: '2004-67', file: '2004/queencosmetics.jpg', title: 'Queen Cosmetics' },
+      { id: '2004-68', file: '2004/revkorda.jpg', title: 'Rev. Korda' },
+      { id: '2004-69', file: '2004/river.jpg', title: 'River' },
+      { id: '2004-70', file: '2004/saddam.jpg', title: 'Saddam' },
+      { id: '2004-71', file: '2004/sam.jpg', title: 'Sam' },
+      { id: '2004-72', file: '2004/selfportrait.jpg', title: 'Self Portrait' },
+      { id: '2004-73', file: '2004/shaye.jpg', title: 'Shaye' },
+      { id: '2004-74', file: '2004/tate.jpg', title: 'Tate' },
+      { id: '2004-75', file: '2004/television.jpg', title: 'Television' },
+      { id: '2004-76', file: '2004/thankyoumisterpresident.jpg', title: 'Thank You Mister President' },
+      { id: '2004-77', file: '2004/thecreation.jpg', title: 'The Creation' },
+      { id: '2004-78', file: '2004/thedeathoflove.jpg', title: 'The Death of Love' },
+      { id: '2004-79', file: '2004/thesaddistiller.jpg', title: 'The Sad Distiller' },
+      { id: '2004-80', file: '2004/thesuccess.jpg', title: 'The Success' },
+      { id: '2004-81', file: '2004/tictac.jpg', title: 'Tic Tac' },
+      { id: '2004-82', file: '2004/tumorcan.jpg', title: 'Tumor Can' },
+      { id: '2004-83', file: '2004/tumorcans.jpg', title: 'Tumor Cans' },
+      { id: '2004-84', file: '2004/unpopartvisualmanifesto.jpg', title: 'Un Pop Art Visual Manifesto' },
+      { id: '2004-85', file: '2004/venere.jpg', title: 'Venere' },
+      { id: '2004-86', file: '2004/weather.jpg', title: 'Weather' },
+      { id: '2004-87', file: '2004/woman.jpg', title: 'Woman' },
+      { id: '2004-88', file: '2004/yougs.jpg', title: 'Yougs' },
+      { id: '2004-89', file: '2004/labeuveusedecafé.JPG', title: 'La Buveuse de Café' },
+    ]
+  },
+];
+
+/* ── Gallery lightbox ────────────────────────────────────────── */
+function GalleryLightbox({ work, onClose, onPrev, onNext }) {
+  const closeRef = useRef(null);
+  const touchX = useRef(0);
+  useEffect(() => {
+    const prev = document.activeElement;
+    closeRef.current?.focus();
+    return () => prev?.focus();
+  }, []);
+  useEffect(() => {
+    const h = e => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') onNext();
+      if (e.key === 'ArrowLeft') onPrev();
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose, onPrev, onNext]);
+
+  return (
+    <div role="dialog" aria-modal="true" aria-label={work.title}
+      onClick={onClose}
+      onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
+      onTouchEnd={e => { const dx = e.changedTouches[0].clientX - touchX.current; if (dx > 50) onPrev(); else if (dx < -50) onNext(); }}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.94)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999,
+      }}>
+      <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 900, width: '92%' }}>
+        <img src={BASE + '/' + work.file} alt={work.title}
+          style={{ maxHeight: '78vh', maxWidth: '100%', objectFit: 'contain', display: 'block' }} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 20, gap: 16 }}>
+          <button onClick={onPrev} aria-label="Previous artwork" style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>←</button>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 17, color: '#F5F0E8', marginBottom: 5 }}>{work.title}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
+              {work.period} · {work.medium}
+            </div>
+          </div>
+          <button onClick={onNext} aria-label="Next artwork" style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', padding: 0, flexShrink: 0 }}>→</button>
+        </div>
+      </div>
+      <button ref={closeRef} onClick={onClose} aria-label="Close lightbox" style={{
+        position: 'absolute', top: 24, right: 32,
+        background: 'none', border: 'none', color: '#A08060',
+        fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+      }}>✕ Close</button>
+    </div>
+  );
+}
+
+/* ── Gallery item ────────────────────────────────────────────── */
+function GalleryItem({ work, period, defaultMedium, onClick }) {
+  const [hov, setHov] = useState(false);
+  const src = BASE + '/' + work.file;
+  const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick({ ...work, period, medium: work.medium || defaultMedium }); } };
+  return (
+    <div role="button" tabIndex={0} aria-label={`View ${work.title}`}
+      style={{ cursor: 'pointer', minWidth: 0 }}
+      onClick={() => onClick({ ...work, period, medium: work.medium || defaultMedium })}
+      onKeyDown={handleKey}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+      <div style={{ width: '100%', height: 140, overflow: 'hidden', background: '#EDE7D9' }}>
+        <img src={src} alt={work.title} loading="lazy"
+          style={{ width: '100%', height: '100%', objectFit: 'cover',
+            transform: hov ? 'scale(1.04)' : 'scale(1)',
+            transition: 'transform 350ms ease', display: 'block' }} />
+      </div>
+      <div style={{ paddingTop: 7 }}>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#111', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{work.title}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ArtGallery page ─────────────────────────────────────────── */
+function ArtGallery({ initialPeriod }) {
+  const [activePeriod, setActivePeriod] = useState(initialPeriod || null);
+  const [lightbox, setLightbox] = useState(null);
+
+  const periods = GALLERY_DATA.map(d => d.period);
+  const totalAll = GALLERY_DATA.reduce((sum, d) => sum + d.works.length, 0);
+  const data = activePeriod ? GALLERY_DATA.filter(d => d.period === activePeriod) : GALLERY_DATA;
+  const flatWorks = data.flatMap(s => s.works.map(w => ({ ...w, period: s.period, medium: w.medium || s.medium })));
+
+  const openLightbox = (work) => {
+    const idx = flatWorks.findIndex(w => w.id === work.id);
+    setLightbox({ idx });
+  };
+
+  const btnStyle = (active) => ({
+    fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
+    background: active ? '#111' : 'transparent',
+    color: active ? '#F5F0E8' : '#2A2A2A',
+    border: '1px solid ' + (active ? '#111' : '#8A7A6B'),
+    padding: '6px 14px', cursor: 'pointer', transition: 'all 200ms',
+  });
+
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
+      <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 28px' }}>Gallery</h1>
+      <div className="gallery-filters gallery-sticky-filters" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        <button onClick={() => setActivePeriod(null)} style={btnStyle(activePeriod === null)}>All ({totalAll})</button>
+        {periods.map(p => {
+          const count = GALLERY_DATA.find(d => d.period === p).works.length;
+          return <button key={p} onClick={() => setActivePeriod(p)} style={btnStyle(activePeriod === p)}>{p} ({count})</button>;
+        })}
+      </div>
+
+      {data.length === 0 && (
+        <div role="status" style={{ padding: '80px 0', textAlign: 'center', fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#705C48' }}>
+          No works in this period.
+        </div>
+      )}
+
+      {data.map(section => (
+        <div key={section.period} style={{ marginBottom: 72 }}>
+          <div className="gallery-section-header" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
+            <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap', fontWeight: 400, margin: 0 }}>{section.period}</h2>
+            <div style={{ flex: 1, height: 1, background: '#C8BCA8', minWidth: 8 }} />
+            <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.medium}</div>
+            <div className="gallery-works-count" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px 16px' }} className="six-col">
+            {section.works.map(w => (
+              <GalleryItem key={w.id} work={w} period={section.period} defaultMedium={section.medium} onClick={openLightbox} />
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {lightbox !== null && (
+        <GalleryLightbox
+          work={flatWorks[lightbox.idx]}
+          onClose={() => setLightbox(null)}
+          onPrev={() => setLightbox(l => ({ idx: (l.idx - 1 + flatWorks.length) % flatWorks.length }))}
+          onNext={() => setLightbox(l => ({ idx: (l.idx + 1) % flatWorks.length }))}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ── Exhibitions data ────────────────────────────────────────── */
+const SHOWS_BASE = 'assets/artshows';
+
+/* Add new filenames here when dropping images into assets/images/ (exclude the about/ subfolder) */
+const HOMEPAGE_IMAGES = [
+  'CIMG0256.JPG',
+  'DSCF2796.JPG',
+  'DSCF2809.jpg',
+];
+
+const SHOWS_DATA = [
+  {
+    year: 2013,
+    shows: [
+      { title: 'I Want More', type: 'Group', venue: 'Bamboo Curtain Studio', city: 'Taipei', country: 'Taiwan', dates: 'June 7–14, 2013' },
+      { title: 'Group Show with Valentina Zummo', type: 'Group', venue: 'Barnum Cafè', city: 'Rome', country: 'Italy', dates: 'January 25 – February 8, 2013' },
+    ]
+  },
+  {
+    year: 2012,
+    shows: [
+      { title: 'Make Love with Us', type: 'Group', venue: 'Antica Biblioteca Valle', city: 'Rome', country: 'Italy', dates: 'December 2, 2012' },
+      { title: 'Valerio Pierbattista + Gianni Lancellotti', type: 'Group', venue: 'Hula Hoop Club', city: 'Rome', country: 'Italy', dates: 'November 23 – December 6, 2012', sources: [{ folder: 'added/SOLO DUE - hula hoop 23-11-12', count: 22 }] },
+      { title: 'Group Show', type: 'Group', venue: 'Caffè QuattroTempi', city: 'Rome', country: 'Italy', dates: 'May 25 – June 8, 2012' },
+      { title: 'Lilly and the Noise Collective', type: 'Group', venue: 'Hula Hoop Club', city: 'Rome', country: 'Italy', dates: 'April 20 – May 1, 2012', sources: [{ folder: 'added/LILLY AND THE NOISE COLLECTIVE aprile 2012', count: 17 }] },
+    ]
+  },
+  {
+    year: 2011,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'Tornatora Art Gallery', city: 'Rome', country: 'Italy', dates: 'June 22 – July 6, 2011', sources: [{ folder: 'added/tornatora luglio 2011', count: 4 }] },
+      { title: 'Dirty Show Los Angeles', type: 'Group', venue: 'City Center Hotel', city: 'Los Angeles', country: 'USA', dates: 'June 10–11, 2011', sources: [{ folder: 'added/Dirty show LA 2011 june', count: 2 }] },
+      { title: 'Solo Show', type: 'Solo', venue: 'Hula Hoop Club', city: 'Rome', country: 'Italy', dates: 'April 27 – May 11, 2011', sources: [{ folder: 'added/hulahoop-aprile2011', count: 7 }] },
+      { title: 'Group Show', type: 'Group', venue: 'Balmaceda Arte Joven Gallery', city: 'Santiago de Chile', country: 'Chile', dates: 'March 24 – April 29, 2011' },
+    ]
+  },
+  {
+    year: 2010,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'MF Gallery', city: 'Genova', country: 'Italy', dates: 'September 17 – October 10, 2010' },
+      { title: 'Dirty Show Chicago', type: 'Group', venue: 'Viaduct Theatre', city: 'Chicago', country: 'USA', dates: 'June 25–26, 2010' },
+      { title: 'Group Show', type: 'Group', venue: 'Parlor Art Gallery', city: 'New Jersey', country: 'USA', dates: 'May 29 – June 28, 2010' },
+      { title: 'One Night Stand', type: 'Solo', venue: 'Foollyc', city: 'Rome', country: 'Italy', dates: 'February 26, 2010' },
+      { title: 'Group Show', type: 'Group', venue: 'Faenas Cafè', city: 'Rome', country: 'Italy', dates: 'February 19–26, 2010', sources: [{ folder: 'faenas', count: 3 }] },
+      { title: 'Group Show', type: 'Group', venue: "Alice's Cafè", city: 'Rome', country: 'Italy', dates: 'February 11–25, 2010', sources: [{ folder: 'alices', count: 6 }] },
+      { title: 'Dirty Show 2010', type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 12–20, 2010' },
+    ]
+  },
+  {
+    year: 2009,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'MondoPop International Gallery', city: 'Rome', country: 'Italy', dates: 'December 12, 2009 – February 20, 2010', sources: [{ folder: 'mondopop_artesagra', count: 6 }, { folder: 'added/mondopop dicembre 2009', count: 3 }] },
+      { title: 'Group Show', type: 'Group', venue: 'Erotic Museum', city: 'Amsterdam', country: 'Netherlands', dates: 'December 10, 2009', sources: [{ folder: 'sag', count: 7 }, { folder: 'added/sag amsterdam erotic museum', count: 46 }] },
+      { title: 'Group Show', type: 'Group', venue: 'Re Bacco', city: 'Rome', country: 'Italy', dates: 'November 26 – December 2, 2009', sources: [{ folder: 'rebacco', count: 6 }, { folder: 'added/re bacco novembre 2009', count: 6 }] },
+      { title: 'Group Show', type: 'Group', venue: 'Aequalis Contemporary Art Gallery', city: 'Rome', country: 'Italy', dates: 'November 9 – December 9, 2009', sources: [{ folder: 'aequalis', count: 6 }, { folder: 'added/aequalis gallery via margutta - 9 novembre 09', count: 19 }] },
+      { title: 'Moth-a-Fucker', type: 'Group', venue: 'MF Gallery', city: 'Genova', country: 'Italy', dates: 'October 24 – December 22, 2009', sources: [{ folder: 'mfgallery', count: 3 }] },
+      { title: 'PunkSurrealism', type: 'Group', venue: 'Laboratorio 51', city: 'Rome', country: 'Italy', dates: 'September 24 – October 13, 2009', sources: [{ folder: 'laboratorio51', count: 6 }, { folder: 'added/lab51', count: 26 }] },
+      { title: 'Valerio Pierbattista and The Seventh Life', type: 'Group', venue: 'Straight to Hell', city: 'Rome', country: 'Italy', dates: 'June 19 – July 31, 2009', sources: [{ folder: 'straight', count: 6 }, { folder: 'added/Straight to Hell - G&V', count: 17 }] },
+      { title: "Una Mostra per l'Abruzzo", type: 'Group', venue: 'MondoPop International Gallery', city: 'Rome', country: 'Italy', dates: 'May 23 – June 13, 2009', sources: [{ folder: 'mondopop_abruzzo', count: 5 }] },
+      { title: "Detroit's Dirty Show 10", type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 6–14, 2009', sources: [{ folder: 'dirtydetroit10', count: 5 }] },
+    ]
+  },
+  {
+    year: 2008,
+    shows: [
+      { title: 'Group Show', type: 'Group', venue: 'KIN Shop', city: 'London', country: 'UK', dates: 'December 2008 – January 2009' },
+      { title: 'Art@Large Juried Group Show', type: 'Group', venue: 'CryBaby Art Gallery', city: 'New York', country: 'USA', dates: 'August 2 – September 3, 2008' },
+      { title: 'Solo Show', type: 'Solo', venue: 'Museum of Porn in Art', city: 'Zurich', country: 'Switzerland', dates: 'July 4 – August 31, 2008', sources: [{ folder: 'porninart', count: 6 }, { folder: 'added/Zurich - Porn in art - 4 Luglio 2008', count: 15 }] },
+      { title: 'Caput Mundi Pop — Group Show', type: 'Group', venue: 'MondoPop International Gallery', city: 'Rome', country: 'Italy', dates: 'March 15 – April 26, 2008', sources: [{ folder: 'mondopop_caput', count: 6 }, { folder: 'added/mondopop marzo 2008', count: 13 }] },
+      { title: "Detroit's Dirty Show 9", type: 'Group', venue: 'Dirty Show', city: 'Detroit', country: 'USA', dates: 'February 8–16, 2008', sources: [{ folder: 'dirtydetroit9', count: 6 }] },
+    ]
+  },
+  {
+    year: 2007,
+    shows: [
+      { title: "Artigianando nell'Arte", type: 'Group', venue: 'Group Show', city: 'Torino', country: 'Italy', dates: 'October 6–21, 2007' },
+      { title: 'Art Bologna', type: 'Group', venue: 'Art Fair', city: 'Bologna', country: 'Italy', dates: 'September 1–26, 2007' },
+      { title: 'Arte Erotica 2007', type: 'Group', venue: 'Officine Artistiche', city: 'Treviso', country: 'Italy', dates: 'June 2007', sources: [{ folder: 'added/Treviso Giugno 2007', count: 9 }] },
+      { title: 'QueerJubilee', type: 'Group', venue: 'Metaverso', city: 'Rome', country: 'Italy', dates: 'April 13, 2007', sources: [{ folder: 'added/Metaverso-QueerJubilee-13Aprile2007', count: 3 }, { folder: 'added/Multisensorial 2', count: 9 }] },
+      { title: 'Techne', type: 'Group', venue: 'Santa Maria della Pietà', city: 'Rome', country: 'Italy', dates: 'February 2007', sources: [{ folder: 'added/Techne - Santa Maria della Pietà - Febbraio 2007', count: 26 }] },
+      { title: 'Queernevale', type: 'Group', venue: 'Locanda Atlantide', city: 'Rome', country: 'Italy', dates: 'February 2007', sources: [{ folder: 'added/Locanda Atlantide Queernevale Febbraio 2007', count: 34 }] },
+      { title: 'Dirty Show 8', type: 'Group', venue: "Bert's Warehouse Theater", city: 'Detroit', country: 'USA', dates: 'February 9–17, 2007' },
+    ]
+  },
+  {
+    year: 2006,
+    shows: [
+      { title: 'Dirty Show 7.5', type: 'Group', venue: "Bert's Warehouse Theater", city: 'Detroit', country: 'USA', dates: 'September 22–24, 2006' },
+      { title: 'Group Show', type: 'Group', venue: 'Bar Magenta', city: 'Santiago de Chile', country: 'Chile', dates: 'July 22 – August 12, 2006' },
+      { title: 'Solo Show', type: 'Solo', venue: 'Explorer Coffee Gallery', city: 'Rome', country: 'Italy', dates: 'June 16, 2006' },
+      { title: 'Solo Show', type: 'Solo', venue: 'Explorer Coffee Gallery', city: 'Rome', country: 'Italy', dates: 'May 5, 2006', sources: [{ folder: 'added/Explorer Coffee Gallery - 5 maggio 2006', count: 23 }] },
+      { title: 'MarteLive', type: 'Group', venue: 'MarteLive', city: 'Rome', country: 'Italy', dates: 'April 25, 2006', sources: [{ folder: 'added/MarteLive 25.4.2006', count: 17 }] },
+      { title: 'Group Show', type: 'Group', venue: 'Multisensorial Lab', city: 'Rome', country: 'Italy', dates: 'April 7, 2006', sources: [{ folder: 'added/Esposizione Multisensorial Lab 7.4.2006', count: 4 }] },
+      { title: 'Vaudeville Flesh — Fashion Show & Performances', type: 'Group', venue: 'DragonFly', city: 'Hollywood CA', country: 'USA', dates: 'March 18, 2006' },
+      { title: 'Solo Show', type: 'Solo', venue: 'Explorer Coffee Gallery', city: 'Rome', country: 'Italy', dates: 'March 10–17, 2006', sources: [{ folder: 'added/Explorer Coffee Gallery - 10 e 17 marzo 2006', count: 2 }] },
+      { title: 'Dirty Show 7', type: 'Group', venue: 'Tangent Gallery', city: 'Detroit', country: 'USA', dates: 'February 10–14, 2006' },
+      { title: 'Group Show', type: 'Group', venue: 'True Hate Art Gallery', city: 'La Rochelle', country: 'France', dates: 'December 2005 – January 2006' },
+    ]
+  },
+  {
+    year: 2005,
+    shows: [
+      { title: 'Solo Show', type: 'Solo', venue: 'Skorie Industriali', city: 'Rome', country: 'Italy', dates: 'September – October 2005', sources: [{ folder: 'added/Skorie Industriali Artshow - 14.9.2005', count: 14 }] },
+      { title: 'Solo Show', type: 'Solo', venue: 'Ostia Artshow', city: 'Ostia, Rome', country: 'Italy', dates: 'February 18, 2005', sources: [{ folder: 'added/Ostia Artshow 18.2.2005', count: 22 }] },
+      { title: 'Capodanno', type: 'Solo', venue: 'Locanda Atlantide', city: 'Rome', country: 'Italy', dates: 'January 1, 2005', sources: [{ folder: 'added/Locanda Atlantide capodanno 2005', count: 12 }] },
+    ]
+  },
+  {
+    year: 2004,
+    shows: [
+      { title: 'Solo Show', type: 'Solo', venue: 'Coetus', city: 'Rome', country: 'Italy', dates: 'December 22, 2004', sources: [{ folder: 'added/Coetus Artshow 22.12.04', count: 5 }] },
+      { title: 'Solo Show', type: 'Solo', venue: 'Le Nebbie di Avalon', city: 'Bracciano, Rome', country: 'Italy', dates: 'December 12, 2004', sources: [{ folder: 'added/Bracciano Artshow 12.12.04', count: 21 }] },
+    ]
+  },
+];
+
+/* ── Show lightbox ───────────────────────────────────────────── */
+function ShowLightbox({ show, onClose }) {
+  const [idx, setIdx] = useState(0);
+  const [photos, setPhotos] = useState(null); // null = probing
+  const closeRef = useRef(null);
+  const touchX = useRef(0);
+
+  useEffect(() => {
+    const encodeFolder = f => f.split('/').map(encodeURIComponent).join('/');
+    const candidates = (show.sources || []).flatMap(({ folder, count }) =>
+      Array.from({ length: count }, (_, i) => `${SHOWS_BASE}/${encodeFolder(folder)}/${i + 1}.jpg`)
+    );
+    Promise.all(candidates.map(url => new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    }))).then(results => setPhotos(results.filter(Boolean)));
+  }, [show]);
+
+  useEffect(() => {
+    const prev = document.activeElement;
+    closeRef.current?.focus();
+    return () => prev?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!photos) return;
+    const h = e => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') setIdx(i => (i + 1) % photos.length);
+      if (e.key === 'ArrowLeft') setIdx(i => (i - 1 + photos.length) % photos.length);
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [onClose, photos]);
+
+  const loading = photos === null;
+  const empty = !loading && photos.length === 0;
+
+  return ReactDOM.createPortal(
+    <div role="dialog" aria-modal="true" aria-label={`${show.title} — photos`}
+      onClick={onClose}
+      onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
+      onTouchEnd={e => { if (!photos) return; const dx = e.changedTouches[0].clientX - touchX.current; if (dx > 50) setIdx(i => (i - 1 + photos.length) % photos.length); else if (dx < -50) setIdx(i => (i + 1) % photos.length); }}
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.95)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 9999,
+      }}>
+      {(loading || empty) && (
+        <div role="status" aria-live="polite" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#A08060' }}>
+          {loading ? 'Loading…' : 'No photos available'}
+        </div>
+      )}
+      {!loading && !empty && <div onClick={e => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 900, width: '92%' }}>
+        <img src={photos[idx]} alt={`${show.title} — photo ${idx + 1} of ${photos.length}`}
+          style={{ maxHeight: '68vh', maxWidth: '100%', objectFit: 'contain', display: 'block' }} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 20, gap: 16 }}>
+          <button onClick={() => setIdx(i => (i - 1 + photos.length) % photos.length)}
+            aria-label="Previous photo"
+            style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', flexShrink: 0, padding: 0 }}>←</button>
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 17, color: '#F5F0E8', marginBottom: 4 }}>{show.title}</div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#A08060' }}>
+              {show.venue}, {show.city} · {show.dates}
+            </div>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.12em', color: '#A08060', marginTop: 4 }}>
+              {idx + 1} / {photos.length}
+            </div>
+          </div>
+          <button onClick={() => setIdx(i => (i + 1) % photos.length)}
+            aria-label="Next photo"
+            style={{ background: 'none', border: 'none', color: '#A08060', fontSize: 22, cursor: 'pointer', flexShrink: 0, padding: 0 }}>→</button>
+        </div>
+        <div style={{ display: 'flex', gap: 6, marginTop: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {photos.map((p, i) => (
+            <button key={i} onClick={() => setIdx(i)}
+              aria-label={`Photo ${i + 1} of ${photos.length}`}
+              aria-pressed={i === idx}
+              style={{
+                width: 48, height: 48, overflow: 'hidden', cursor: 'pointer',
+                outline: i === idx ? '2px solid #A08060' : '2px solid transparent',
+                transition: 'outline 150ms', flexShrink: 0,
+                background: 'none', border: 'none', padding: 0,
+              }}>
+              <img src={p} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </button>
+          ))}
+        </div>
+      </div>}
+      <button ref={closeRef} onClick={onClose} aria-label="Close photos" style={{
+        position: 'absolute', top: 24, right: 32,
+        background: 'none', border: 'none', color: '#A08060',
+        fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', cursor: 'pointer',
+      }}>✕ Close</button>
+    </div>,
+    document.body
+  );
+}
+
+/* ── Show badge ──────────────────────────────────────────────── */
+function Badge({ type }) {
+  const solo = type === 'Solo';
+  return (
+    <span style={{
+      fontFamily: "'Montserrat',sans-serif", fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase',
+      background: solo ? '#111' : 'transparent', color: solo ? '#F5F0E8' : '#2A2A2A',
+      border: solo ? 'none' : '1px solid #C8BCA8',
+      padding: '3px 9px', whiteSpace: 'nowrap', display: 'inline-block', flexShrink: 0,
+    }}>{type}</span>
+  );
+}
+
+/* ── Show entry (timeline row with optional photo/flyer trigger) ── */
+function ShowEntry({ show }) {
+  const [open, setOpen] = useState(false);
+  const hasMedia = (show.sources || []).some(s => s.count > 0);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, background: '#FFFDF8', padding: '16px 20px', boxShadow: '0 2px 12px rgba(100,80,60,0.18), 0 1px 4px rgba(100,80,60,0.1)' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+        <Badge type={show.type} />
+        <span style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#111' }}>{show.title}</span>
+        <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#5F5347' }}>
+          {show.venue}, {show.city}, {show.country}
+        </span>
+        {hasMedia && (
+          <button onClick={() => setOpen(true)} style={{
+            background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif",
+            fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#705C48',
+            cursor: 'pointer', padding: 0, textDecoration: 'underline', flexShrink: 0,
+          }}>Photos</button>
+        )}
+      </div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.08em', color: '#6B5C4E' }}>{show.dates}</div>
+      {open && <ShowLightbox show={show} onClose={() => setOpen(false)} />}
+    </div>
+  );
+}
+
+/* ── ArtShows page ───────────────────────────────────────────── */
+function ArtShows() {
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const getMonthIdx = dates => { for (let i = 0; i < MONTHS.length; i++) if (dates.includes(MONTHS[i])) return i; return 0; };
+  const getMonthShort = dates => MONTHS[getMonthIdx(dates)].slice(0, 3).toUpperCase();
+
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 880, margin: '0 auto' }} className="page-pad">
+      <div style={{ marginBottom: 56 }}>
+        <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h1>
+        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#705C48' }}>
+          Solo and group shows, 2004–2013 · Rome, London, Detroit, Taipei and beyond
+        </div>
+      </div>
+
+      {[...SHOWS_DATA].sort((a, b) => b.year - a.year).map(yg => {
+        const sorted = [...yg.shows].sort((a, b) => getMonthIdx(b.dates) - getMonthIdx(a.dates));
+        return (
+          <div key={yg.year} style={{ marginBottom: 64 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+              <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#705C48', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>{yg.year}</h2>
+              <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
+            </div>
+
+            <div style={{ position: 'relative' }}>
+              <div className="shows-tl-line" style={{ position: 'absolute', left: 75, top: 0, bottom: 0, width: 1, background: '#E0D8CC' }} />
+
+              {sorted.map((show, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 14 }}>
+                  <div className="shows-tl-left" style={{ width: 80, flexShrink: 0, display: 'flex', alignItems: 'flex-start', paddingTop: 14 }}>
+                    <span style={{
+                      flex: 1, textAlign: 'right', paddingRight: 9,
+                      fontFamily: "'Montserrat',sans-serif", fontSize: 9,
+                      letterSpacing: '0.14em', textTransform: 'uppercase', color: '#705C48', lineHeight: 1,
+                    }} className="shows-month-label">{getMonthShort(show.dates)}</span>
+                    <div style={{
+                      width: 9, height: 9, borderRadius: '50%', flexShrink: 0,
+                      background: '#F5F0E8', border: '1.5px solid #705C48', position: 'relative', zIndex: 1,
+                    }} />
+                  </div>
+
+                  <div style={{ width: 16, height: 1, background: '#C8BCA8', marginTop: 18, flexShrink: 0 }} />
+
+                  <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      position: 'absolute', left: -9, top: 10,
+                      width: 0, height: 0,
+                      borderTop: '8px solid transparent',
+                      borderBottom: '8px solid transparent',
+                      borderRight: '9px solid rgba(100,80,60,0.13)',
+                      zIndex: 0,
+                    }} />
+                    <div style={{
+                      position: 'absolute', left: -7, top: 12,
+                      width: 0, height: 0,
+                      borderTop: '6px solid transparent',
+                      borderBottom: '6px solid transparent',
+                      borderRight: '7px solid #FFFDF8',
+                      zIndex: 2,
+                    }} />
+                    <div style={{ position: 'relative', zIndex: 1 }}>
+                      <ShowEntry show={show} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── HomePage ────────────────────────────────────────────────── */
+
+function FeaturedCard({ work, onNav }) {
+  const [hov, setHov] = useState(false);
+  const go = () => onNav('gallery', { period: work.period });
+  const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
+  return (
+    <div role="button" tabIndex={0} aria-label={`View ${work.title} in gallery`}
+      onClick={go} onKeyDown={handleKey}
+      style={{ cursor: 'pointer' }}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+      <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9' }}>
+        <img src={BASE + '/' + work.file} alt={work.title}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block',
+            transform: hov ? 'scale(1.03)' : 'scale(1)', transition: 'transform 350ms ease' }} />
+      </div>
+      <div style={{ paddingTop: 8, fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 13, color: '#111' }}>{work.title}</div>
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#705C48', marginTop: 2 }}>{work.period} · {work.medium}</div>
+    </div>
+  );
+}
+
+function HomePage({ onNav }) {
+  const [featured] = useState(() =>
+    GALLERY_DATA.map(s => {
+      const w = s.works[Math.floor(Math.random() * s.works.length)];
+      return { file: w.file, title: w.title, period: s.period, medium: w.medium || s.medium };
+    })
+  );
+  const [heroImg] = useState(() => HOMEPAGE_IMAGES[Math.floor(Math.random() * HOMEPAGE_IMAGES.length)]);
+
+  return (
+    <div>
+      <div style={{ padding: '120px 48px 100px', maxWidth: 960, margin: '0 auto' }} className="hero-pad">
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>
+          Artist — Rome
+        </div>
+        <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 32px', maxWidth: 700 }}>
+          Coming from a past of stencils, silkscreens, pop and street art.
+        </h1>
+        <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '0 0 28px' }}>
+          I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
+        </p>
+        <div style={{ margin: '0 0 40px' }}>
+          <iframe
+            src="https://www.youtube.com/embed/FE-CzWQeSZU?si=OYIvl9TwjSG3qCAe"
+            title="Valerio Pierbattista"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+            style={{ width: '100%', aspectRatio: '16/9', border: 'none', display: 'block' }}
+          />
+        </div>
+        <button onClick={() => onNav('gallery')} style={{
+          fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+          background: '#111', color: '#F5F0E8', border: 'none', padding: '14px 36px', cursor: 'pointer',
+        }}>View gallery →</button>
+      </div>
+
+      <div style={{ background: '#EDE7D9', padding: '72px 48px' }} className="feat-pad">
+        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
+            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap' }}>Selected Works</div>
+            <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '32px 28px' }} className="four-col">
+            {featured.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
+          </div>
+          <div style={{ marginTop: 40, textAlign: 'right' }}>
+            <button onClick={() => onNav('gallery')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111', cursor: 'pointer' }}>
+              View all works →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ padding: '80px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '64px', alignItems: 'center' }} className="two-col">
+          <div>
+            <blockquote style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 22, lineHeight: 1.7, color: '#705C48', borderLeft: '1px solid #C8BCA8', paddingLeft: 24, margin: '0 0 24px' }}>
+              "Radically changing his style and communicative intentions, he now draws something more introspective and meaningful."
+            </blockquote>
+            <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
+              Get in touch
+            </button>
+          </div>
+          <div style={{ overflow: 'hidden', background: '#EDE7D9' }}>
+            <img src={`assets/images/${heroImg}`} alt=""
+              style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── AboutPage ───────────────────────────────────────────────── */
+function AboutPage() {
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 960, margin: '0 auto' }} className="page-pad">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }} className="two-col">
+        <div>
+          <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>About</div>
+          <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 40, letterSpacing: '-0.02em', color: '#111', margin: '0 0 32px', lineHeight: 1.1 }}>Valerio Pierbattista</h1>
+          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
+            Born in 1983, Valerio Pierbattista lives and works in Rome, Italy. Coming from a past of stencils, silkscreens, pop and street art, during the last years Valerio abandoned the scene and started from scratch a completely new artistic path.
+          </p>
+          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
+            Radically changing his style and communicative intentions, he now draws something more introspective and meaningful — focusing on storytelling through a self-taught expressionist language.
+          </p>
+          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 32px' }}>
+            His work has been shown internationally — in Rome, London, Detroit, Zurich, Santiago de Chile, Los Angeles, New York, and Taipei.
+          </p>
+        </div>
+        <div>
+          <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9', marginBottom: 12 }}>
+            <img src="assets/images/about/valerio-pierbattista.jpg" alt="Valerio Pierbattista"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ContactPage ─────────────────────────────────────────────── */
+function ContactPage() {
+  return (
+    <div style={{ padding: '64px 48px', maxWidth: 600, margin: '0 auto' }} className="page-pad">
+      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>Contact</div>
+      <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 24px' }}>Inquiries welcome.</h1>
+      <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 15, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 40px' }}>
+        For questions about available works, commissions, or exhibitions, please get in touch. I respond to all inquiries personally.
+      </p>
+      <div style={{ borderTop: '1px solid #C8BCA8', paddingTop: 28 }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', marginBottom: 8 }}>Email</div>
+        <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#705C48', textDecoration: 'none' }}>
+          omegaiori@gmail.com
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ─────────────────────────────────────────────────────── */
+const VALID_PAGES = ['gallery', 'exhibitions', 'about', 'contact'];
+const getPageFromHash = () => {
+  const hash = window.location.hash.slice(1);
+  return VALID_PAGES.includes(hash) ? hash : 'home';
+};
+
+function App() {
+  const [page, setPage] = useState(getPageFromHash);
+  const [navState, setNavState] = useState({});
+
+  const PAGE_TITLES = {
+    home:        'Valerio Pierbattista — Artist',
+    gallery:     'Gallery — Valerio Pierbattista',
+    exhibitions: 'Exhibitions — Valerio Pierbattista',
+    about:       'About — Valerio Pierbattista',
+    contact:     'Contact — Valerio Pierbattista',
+  };
+
+  useEffect(() => {
+    document.title = PAGE_TITLES[page] || 'Valerio Pierbattista — Artist';
+  }, [page]);
+
+  useEffect(() => {
+    const onPop = () => {
+      setPage(getPageFromHash());
+      setNavState({});
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  const onNav = (p, state = {}) => {
+    const hash = p === 'home' ? '' : p;
+    window.history.pushState({}, '', hash ? `#${hash}` : window.location.pathname);
+    setPage(p);
+    setNavState(state);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const renderPage = () => {
+    switch (page) {
+      case 'home':        return <HomePage onNav={onNav} />;
+      case 'gallery':     return <ArtGallery initialPeriod={navState.period} />;
+      case 'exhibitions': return <ArtShows />;
+      case 'about':       return <AboutPage />;
+      case 'contact':     return <ContactPage />;
+      default:            return <HomePage onNav={onNav} />;
+    }
+  };
+
+  const [showTop, setShowTop] = useState(false);
+  const [topBottom, setTopBottom] = useState(32);
+  useEffect(() => {
+    const onScroll = () => {
+      setShowTop(window.scrollY > 400);
+      const footer = document.getElementById('site-footer');
+      if (footer) {
+        const overlap = window.innerHeight - footer.getBoundingClientRect().top;
+        setTopBottom(overlap > 0 ? overlap + 16 : 32);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
+      <Nav page={page} onNav={onNav} />
+      <main id="main-content" style={{ flex: 1 }}>
+        {renderPage()}
+      </main>
+      <Footer />
+      {showTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Back to top"
+          style={{
+            position: 'fixed', bottom: topBottom, right: 32, zIndex: 200,
+            background: '#111', color: '#F5F0E8',
+            border: 'none', cursor: 'pointer',
+            fontFamily: "'Montserrat',sans-serif", fontSize: 11,
+            letterSpacing: '0.14em', textTransform: 'uppercase',
+            padding: '10px 16px',
+          }}>↑ Top</button>
+      )}
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
