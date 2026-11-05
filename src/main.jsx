@@ -19,97 +19,54 @@ function useLockScroll() {
 }
 
 /* ── Nav ─────────────────────────────────────────────────────── */
-function Nav({ page, onNav }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const links = ['Home', 'Gallery', 'Exhibitions', 'About', 'Contact'];
+/* One-page site: the nav scrolls to sections. `active` is the section currently in view. */
+const SECTIONS = [
+  { id: 'gallery', label: 'Gallery' },
+  { id: 'exhibitions', label: 'Exhibitions' },
+];
 
-  const handleNav = (dest) => { setMenuOpen(false); onNav(dest); };
-
+function Nav({ active, onNav }) {
   return (
-    <>
-      <nav style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '22px 48px', borderBottom: '1px solid #C8BCA8',
-        background: '#F5F0E8', position: 'sticky', top: 0, zIndex: 100,
-      }} className="nav-inner">
-        <button onClick={() => handleNav('home')} style={{
-          background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-          fontFamily: "'Montserrat', sans-serif", fontWeight: 300,
-          fontSize: 15, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#111',
-        }}>
-          Valerio<br/>Pierbattista
-        </button>
-        <div style={{ display: 'flex', gap: 36 }} className="nav-links">
-          {links.map(l => (
-            <button key={l} onClick={() => handleNav(l.toLowerCase())}
-              aria-current={page === l.toLowerCase() ? 'page' : undefined}
-              style={{
-                background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-                fontFamily: "'Montserrat', sans-serif", fontSize: 11,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                color: page === l.toLowerCase() ? '#705C48' : '#2A2A2A',
-                transition: 'color 250ms',
-              }}>{l}</button>
-          ))}
-        </div>
-        <button
-          className="nav-hamburger"
-          onClick={() => setMenuOpen(o => !o)}
-          style={{
-            background: 'none', border: 'none', cursor: 'pointer', padding: 4,
-            color: '#111', fontSize: 20, lineHeight: 1,
-          }}
-          aria-label="Menu"
-          aria-expanded={menuOpen}
-          aria-controls="nav-mobile-menu"
-        >
-          {menuOpen ? '✕' : '☰'}
-        </button>
-      </nav>
-      <div id="nav-mobile-menu" className={'nav-mobile-menu' + (menuOpen ? '' : ' closed')} aria-hidden={!menuOpen}>
-        {links.map((l, i) => (
-          <button key={l} onClick={() => handleNav(l.toLowerCase())} style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            padding: '18px 0',
-            borderBottom: i < links.length - 1 ? '1px solid #333' : 'none',
-            fontFamily: "'Montserrat', sans-serif", fontSize: 13,
-            letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: page === l.toLowerCase() ? '#A08060' : '#F5F0E8',
-            textAlign: 'left', width: '100%',
-          }}>{l}</button>
+    <nav id="site-nav" aria-label="Sections" style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '22px 48px', borderBottom: '1px solid #C8BCA8',
+      background: '#F5F0E8', position: 'sticky', top: 0, zIndex: 100,
+    }} className="nav-inner">
+      <a href="#" onClick={e => { e.preventDefault(); onNav('top'); }} style={{
+        textDecoration: 'none',
+        fontFamily: "'Montserrat', sans-serif", fontWeight: 300,
+        fontSize: 15, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#111',
+      }}>
+        Valerio<br/>Pierbattista
+      </a>
+      <div style={{ display: 'flex', gap: 36 }} className="nav-links">
+        {SECTIONS.map(s => (
+          <a key={s.id} href={`#${s.id}`} onClick={e => { e.preventDefault(); onNav(s.id); }}
+            aria-current={active === s.id ? 'location' : undefined}
+            style={{
+              textDecoration: 'none',
+              fontFamily: "'Montserrat', sans-serif", fontSize: 11,
+              letterSpacing: '0.18em', textTransform: 'uppercase',
+              color: active === s.id ? '#705C48' : '#2A2A2A',
+              borderBottom: '1px solid ' + (active === s.id ? '#705C48' : 'transparent'),
+              paddingBottom: 3,
+              transition: 'color 250ms, border-color 250ms',
+            }}>{s.label}</a>
         ))}
       </div>
-    </>
+    </nav>
   );
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */
 function Footer() {
   return (
-    <footer id="site-footer" style={{
-      borderTop: '1px solid #C8BCA8', padding: '40px 48px',
+    <footer id="site-footer" className="footer-inner" style={{
+      borderTop: '1px solid #C8BCA8', padding: '32px 48px',
       background: '#F5F0E8', marginTop: 96,
-      display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
-    }} className="footer-inner">
-      <div>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#111', marginBottom: 6 }}>
-          Valerio Pierbattista
-        </div>
-        <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48' }}>
-          Represented in private collections across Europe and the United States.
-        </div>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }} className="footer-right">
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A' }}>
-          Inquiries welcome
-        </div>
-        <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 12, color: '#705C48', textDecoration: 'none' }}>
-          omegaiori@gmail.com
-        </a>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', marginTop: 10 }}>
-          © 2026 Valerio Pierbattista
-        </div>
-      </div>
+      fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347',
+    }}>
+      © 2026 Valerio Pierbattista
     </footer>
   );
 }
@@ -196,9 +153,8 @@ function GalleryItem({ work, period, defaultMedium, onClick }) {
   );
 }
 
-/* ── ArtGallery page ─────────────────────────────────────────── */
-function ArtGallery({ initialPeriod }) {
-  const [activePeriod, setActivePeriod] = useState(initialPeriod || null);
+/* ── Gallery section ─────────────────────────────────────────── */
+function ArtGallery({ activePeriod, setActivePeriod }) {
   const [lightbox, setLightbox] = useState(null);
 
   const periods = GALLERY_DATA.map(d => d.period);
@@ -220,8 +176,8 @@ function ArtGallery({ initialPeriod }) {
   });
 
   return (
-    <div style={{ padding: '64px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
-      <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 28px' }}>Gallery</h1>
+    <section id="gallery" aria-labelledby="gallery-title" style={{ padding: '64px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
+      <h2 id="gallery-title" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 28px' }}>Gallery</h2>
       <div className="gallery-filters gallery-sticky-filters" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         <button onClick={() => setActivePeriod(null)} style={btnStyle(activePeriod === null)}>All ({totalAll})</button>
         {periods.map(p => {
@@ -239,7 +195,7 @@ function ArtGallery({ initialPeriod }) {
       {data.map(section => (
         <div key={section.period} style={{ marginBottom: 72 }}>
           <div className="gallery-section-header" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
-            <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap', fontWeight: 400, margin: 0 }}>{section.period}</h2>
+            <h3 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', whiteSpace: 'nowrap', fontWeight: 400, margin: 0 }}>{section.period}</h3>
             <div style={{ flex: 1, height: 1, background: '#C8BCA8', minWidth: 8 }} />
             <div className="gallery-meta" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.medium}</div>
             <div className="gallery-works-count" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#5F5347', whiteSpace: 'nowrap' }}>{section.works.length} works</div>
@@ -260,17 +216,9 @@ function ArtGallery({ initialPeriod }) {
           onNext={() => setLightbox(l => ({ idx: (l.idx + 1) % flatWorks.length }))}
         />
       )}
-    </div>
+    </section>
   );
 }
-
-/* ── Exhibitions data ────────────────────────────────────────── */
-/* Add new filenames here when dropping images into assets/images/ (exclude the about/ subfolder) */
-const HOMEPAGE_IMAGES = [
-  'CIMG0256.JPG',
-  'DSCF2796.JPG',
-  'DSCF2809.jpg',
-];
 
 /* SHOWS_DATA / SHOWS_BASE: see shows-data.js */
 
@@ -417,7 +365,7 @@ function ShowEntry({ show }) {
   );
 }
 
-/* ── ArtShows page ───────────────────────────────────────────── */
+/* ── Exhibitions section ─────────────────────────────────────── */
 function ArtShows() {
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   /* Month of the START date: the month name that appears first in the string
@@ -430,11 +378,11 @@ function ArtShows() {
   const getMonthShort = dates => MONTHS[getMonthIdx(dates)].slice(0, 3).toUpperCase();
 
   return (
-    <div style={{ padding: '64px 48px', maxWidth: 880, margin: '0 auto' }} className="page-pad">
+    <section id="exhibitions" aria-labelledby="exhibitions-title" style={{ padding: '64px 48px', maxWidth: 880, margin: '0 auto' }} className="page-pad">
       <div style={{ marginBottom: 56 }}>
-        <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h1>
+        <h2 id="exhibitions-title" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 8px' }}>Exhibitions</h2>
         <div style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 14, color: '#705C48' }}>
-          Solo and group shows, 2004–2013 · Rome, London, Detroit, Taipei and beyond
+          Solo and group shows, 2004–2013
         </div>
       </div>
 
@@ -443,7 +391,7 @@ function ArtShows() {
         return (
           <div key={yg.year} style={{ marginBottom: 64 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-              <h2 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#705C48', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>{yg.year}</h2>
+              <h3 style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#705C48', fontWeight: 600, margin: 0, whiteSpace: 'nowrap' }}>{yg.year}</h3>
               <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
             </div>
 
@@ -493,15 +441,15 @@ function ArtShows() {
           </div>
         );
       })}
-    </div>
+    </section>
   );
 }
 
-/* ── HomePage ────────────────────────────────────────────────── */
+/* ── Opening + selected works ────────────────────────────────── */
 
-function FeaturedCard({ work, onNav }) {
+function FeaturedCard({ work, onSelect }) {
   const [hov, setHov] = useState(false);
-  const go = () => onNav('gallery', { period: work.period });
+  const go = () => onSelect(work.period);
   const handleKey = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } };
   return (
     <div role="button" tabIndex={0} aria-label={`View ${work.title} in gallery`}
@@ -519,210 +467,131 @@ function FeaturedCard({ work, onNav }) {
   );
 }
 
-function HomePage({ onNav }) {
+function Opening({ onNav }) {
+  return (
+    <section id="top" aria-label="Introduction" style={{ padding: '120px 48px 100px', maxWidth: 960, margin: '0 auto' }} className="hero-pad">
+      <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 40px' }}>
+        Valerio Pierbattista
+      </h1>
+      <div style={{ margin: '0 0 40px' }}>
+        <iframe
+          src="https://www.youtube.com/embed/FE-CzWQeSZU?si=OYIvl9TwjSG3qCAe"
+          title="Valerio Pierbattista"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+          style={{ width: '100%', aspectRatio: '16/9', border: 'none', display: 'block' }}
+        />
+      </div>
+      <a href="#gallery" onClick={e => { e.preventDefault(); onNav('gallery'); }} style={{
+        display: 'inline-block', textDecoration: 'none',
+        fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+        background: '#111', color: '#F5F0E8', padding: '14px 36px',
+      }}>View gallery →</a>
+    </section>
+  );
+}
+
+function SelectedWorks({ onNav, onSelectPeriod }) {
   const [featured] = useState(() =>
     GALLERY_DATA.map(s => {
       const w = s.works[Math.floor(Math.random() * s.works.length)];
       return { file: w.file, title: w.title, period: s.period, medium: w.medium || s.medium };
     })
   );
-  const [heroImg] = useState(() => HOMEPAGE_IMAGES[Math.floor(Math.random() * HOMEPAGE_IMAGES.length)]);
-
   return (
-    <div>
-      <div style={{ padding: '120px 48px 100px', maxWidth: 960, margin: '0 auto' }} className="hero-pad">
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>
-          Artist — Rome
+    <section aria-labelledby="selected-title" style={{ background: '#EDE7D9', padding: '72px 48px' }} className="feat-pad">
+      <div style={{ maxWidth: 960, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
+          <h2 id="selected-title" style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, fontWeight: 400, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap', margin: 0 }}>Selected Works</h2>
+          <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
         </div>
-        <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 32px', maxWidth: 700 }}>
-          Coming from a past of stencils, silkscreens, pop and street art.
-        </h1>
-        <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '0 0 28px' }}>
-          I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
-        </p>
-        <div style={{ margin: '0 0 40px' }}>
-          <iframe
-            src="https://www.youtube.com/embed/FE-CzWQeSZU?si=OYIvl9TwjSG3qCAe"
-            title="Valerio Pierbattista"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            style={{ width: '100%', aspectRatio: '16/9', border: 'none', display: 'block' }}
-          />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '32px 28px' }} className="four-col">
+          {featured.map((w, i) => <FeaturedCard key={i} work={w} onSelect={onSelectPeriod} />)}
         </div>
-        <button onClick={() => onNav('gallery')} style={{
-          fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
-          background: '#111', color: '#F5F0E8', border: 'none', padding: '14px 36px', cursor: 'pointer',
-        }}>View gallery →</button>
-      </div>
-
-      <div style={{ background: '#EDE7D9', padding: '72px 48px' }} className="feat-pad">
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
-            <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#111', whiteSpace: 'nowrap' }}>Selected Works</div>
-            <div style={{ flex: 1, height: 1, background: '#C8BCA8' }} />
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '32px 28px' }} className="four-col">
-            {featured.map((w, i) => <FeaturedCard key={i} work={w} onNav={onNav} />)}
-          </div>
-          <div style={{ marginTop: 40, textAlign: 'right' }}>
-            <button onClick={() => onNav('gallery')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111', cursor: 'pointer' }}>
-              View all works →
-            </button>
-          </div>
+        <div style={{ marginTop: 40, textAlign: 'right' }}>
+          <a href="#gallery" onClick={e => { e.preventDefault(); onNav('gallery'); }} style={{ textDecoration: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#111' }}>
+            View all works →
+          </a>
         </div>
       </div>
-
-      <div style={{ padding: '80px 48px', maxWidth: 1100, margin: '0 auto' }} className="page-pad">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '64px', alignItems: 'center' }} className="two-col">
-          <div>
-            <blockquote style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 22, lineHeight: 1.7, color: '#705C48', borderLeft: '1px solid #C8BCA8', paddingLeft: 24, margin: '0 0 24px' }}>
-              "Radically changing his style and communicative intentions, he now draws something more introspective and meaningful."
-            </blockquote>
-            <button onClick={() => onNav('contact')} style={{ background: 'none', border: 'none', fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', cursor: 'pointer', borderBottom: '1px solid #C8BCA8', paddingBottom: 2 }}>
-              Get in touch
-            </button>
-          </div>
-          <div style={{ overflow: 'hidden', background: '#EDE7D9' }}>
-            <img src={`assets/images/${heroImg}`} alt=""
-              style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
-          </div>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }
 
-/* ── AboutPage ───────────────────────────────────────────────── */
-function AboutPage() {
-  return (
-    <div style={{ padding: '64px 48px', maxWidth: 960, margin: '0 auto' }} className="page-pad">
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }} className="two-col">
-        <div>
-          <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>About</div>
-          <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 40, letterSpacing: '-0.02em', color: '#111', margin: '0 0 32px', lineHeight: 1.1 }}>Valerio Pierbattista</h1>
-          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
-            Born in 1983, Valerio Pierbattista lives and works in Rome, Italy. Coming from a past of stencils, silkscreens, pop and street art, during the last years Valerio abandoned the scene and started from scratch a completely new artistic path.
-          </p>
-          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 20px' }}>
-            Radically changing his style and communicative intentions, he now draws something more introspective and meaningful — focusing on storytelling through a self-taught expressionist language.
-          </p>
-          <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 16, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 32px' }}>
-            His work has been shown internationally — in Rome, London, Detroit, Zurich, Santiago de Chile, Los Angeles, New York, and Taipei.
-          </p>
-        </div>
-        <div>
-          <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#EDE7D9', marginBottom: 12 }}>
-            <img src="assets/images/about/valerio-pierbattista.jpg" alt="Valerio Pierbattista"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+/* ── App (one page) ──────────────────────────────────────────── */
+const SECTION_IDS = SECTIONS.map(s => s.id);
+const navHeight = () => document.getElementById('site-nav')?.offsetHeight || 0;
 
-/* ── ContactPage ─────────────────────────────────────────────── */
-function ContactPage() {
-  return (
-    <div style={{ padding: '64px 48px', maxWidth: 600, margin: '0 auto' }} className="page-pad">
-      <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#705C48', marginBottom: 24 }}>Contact</div>
-      <h1 style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 36, letterSpacing: '-0.02em', color: '#111', margin: '0 0 24px' }}>Inquiries welcome.</h1>
-      <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 15, lineHeight: 1.85, color: '#2A2A2A', margin: '0 0 40px' }}>
-        For questions about available works, commissions, or exhibitions, please get in touch. I respond to all inquiries personally.
-      </p>
-      <div style={{ borderTop: '1px solid #C8BCA8', paddingTop: 28 }}>
-        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#2A2A2A', marginBottom: 8 }}>Email</div>
-        <a href="mailto:omegaiori@gmail.com" style={{ fontFamily: "'Noto Serif',serif", fontStyle: 'italic', fontSize: 18, color: '#705C48', textDecoration: 'none' }}>
-          omegaiori@gmail.com
-        </a>
-      </div>
-    </div>
-  );
+/* Scroll so the section starts right under the sticky nav ('top' = page top). */
+function scrollToSection(id, behavior = scrollBehavior()) {
+  const el = SECTION_IDS.includes(id) ? document.getElementById(id) : null;
+  const top = el ? el.getBoundingClientRect().top + window.scrollY - navHeight() : 0;
+  window.scrollTo({ top: Math.max(0, top), behavior });
 }
-
-/* ── App ─────────────────────────────────────────────────────── */
-const VALID_PAGES = ['gallery', 'exhibitions', 'about', 'contact'];
-const PAGE_TITLES = {
-  home:        'Valerio Pierbattista — Artist',
-  gallery:     'Gallery — Valerio Pierbattista',
-  exhibitions: 'Exhibitions — Valerio Pierbattista',
-  about:       'About — Valerio Pierbattista',
-  contact:     'Contact — Valerio Pierbattista',
-};
-const getPageFromHash = () => {
-  const hash = window.location.hash.slice(1);
-  return VALID_PAGES.includes(hash) ? hash : 'home';
-};
 
 function App() {
-  const [page, setPage] = useState(getPageFromHash);
-  const [navState, setNavState] = useState({});
+  const [active, setActive] = useState(null);
+  const [galleryPeriod, setGalleryPeriod] = useState(null);
 
-  useEffect(() => {
-    document.title = PAGE_TITLES[page] || 'Valerio Pierbattista — Artist';
-  }, [page]);
+  /* Nav click: animated scroll + keep the URL shareable (#gallery / #exhibitions) without adding history entries */
+  const onNav = id => {
+    window.history.replaceState(null, '', SECTION_IDS.includes(id) ? `#${id}` : window.location.pathname + window.location.search);
+    scrollToSection(id);
+  };
+  const showPeriod = period => { setGalleryPeriod(period); onNav('gallery'); };
 
+  /* Deep links: /#gallery or /#exhibitions on load, and manual hash changes */
   useEffect(() => {
-    const onPop = () => {
-      setPage(getPageFromHash());
-      setNavState({});
-      window.scrollTo({ top: 0 });
-    };
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
+    const fromHash = () => { const id = window.location.hash.slice(1); if (SECTION_IDS.includes(id)) scrollToSection(id, 'auto'); };
+    fromHash();
+    document.fonts?.ready.then(fromHash); // re-align once web fonts have settled the layout
+    window.addEventListener('hashchange', fromHash);
+    return () => window.removeEventListener('hashchange', fromHash);
   }, []);
 
-  const onNav = (p, state = {}) => {
-    const hash = p === 'home' ? '' : p;
-    window.history.pushState({}, '', hash ? `#${hash}` : window.location.pathname);
-    setPage(p);
-    setNavState(state);
-    window.scrollTo({ top: 0, behavior: scrollBehavior() });
-  };
-
-  const renderPage = () => {
-    switch (page) {
-      case 'home':        return <HomePage onNav={onNav} />;
-      case 'gallery':     return <ArtGallery initialPeriod={navState.period} />;
-      case 'exhibitions': return <ArtShows />;
-      case 'about':       return <AboutPage />;
-      case 'contact':     return <ContactPage />;
-      default:            return <HomePage onNav={onNav} />;
-    }
-  };
-
+  /* Scroll spy + back-to-top button */
   const [showTop, setShowTop] = useState(false);
   const [topBottom, setTopBottom] = useState(32);
   useEffect(() => {
     const onScroll = () => {
       setShowTop(window.scrollY > 400);
+      const line = navHeight() + window.innerHeight * 0.3;
+      let current = null;
+      for (const id of SECTION_IDS) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= line) current = id;
+      }
+      setActive(current);
       const footer = document.getElementById('site-footer');
       if (footer) {
         const overlap = window.innerHeight - footer.getBoundingClientRect().top;
         setTopBottom(overlap > 0 ? overlap + 16 : 32);
       }
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* href="#main-content" would clobber the hash router (it would navigate home), so focus manually */}
       <a href="#main-content" className="skip-link"
         onClick={e => { e.preventDefault(); const m = document.getElementById('main-content'); m?.focus(); m?.scrollIntoView(); }}>
         Skip to main content
       </a>
-      <Nav page={page} onNav={onNav} />
+      <Nav active={active} onNav={onNav} />
       <main id="main-content" tabIndex={-1} style={{ flex: 1, outline: 'none' }}>
-        {renderPage()}
+        <Opening onNav={onNav} />
+        <SelectedWorks onNav={onNav} onSelectPeriod={showPeriod} />
+        <ArtGallery activePeriod={galleryPeriod} setActivePeriod={setGalleryPeriod} />
+        <ArtShows />
       </main>
       <Footer />
       {showTop && (
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: scrollBehavior() })}
+          onClick={() => onNav('top')}
           aria-label="Back to top"
           style={{
             position: 'fixed', bottom: topBottom, right: 32, zIndex: 200,
