@@ -21,7 +21,8 @@ const walk = (dir) => {
   if (files.length && dir !== base) {
     manifest[relative(base, dir).split('\\').join('/')] = files;
   }
-  for (const e of entries) if (e.isDirectory()) walk(join(dir, e.name));
+  // flyers/ holds one flyer per show, referenced explicitly via `flyer` in shows-data.js
+  for (const e of entries) if (e.isDirectory() && !(dir === base && e.name === 'flyers')) walk(join(dir, e.name));
 };
 
 walk(base);
