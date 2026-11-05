@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -30,75 +30,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-  body { background: #F5F0E8; color: #111; }
-  button { cursor: pointer; }
-  ::selection { background: #111; color: #F5F0E8; }
-  :focus-visible { outline: 2px solid #705C48; outline-offset: 3px; }
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { transition: none !important; animation: none !important; }
-  }
-  .skip-link {
-    position: absolute; top: -100%; left: 0; z-index: 9999;
-    background: #111; color: #F5F0E8; padding: 10px 20px;
-    font-family: 'Montserrat', sans-serif; font-size: 13px;
-    letter-spacing: 0.08em; text-decoration: none;
-  }
-  .skip-link:focus { top: 0; }
-  .gallery-sticky-filters {
-    position: sticky;
-    top: 81px;
-    z-index: 90;
-    background: #F5F0E8;
-    padding: 12px 0;
-    border-bottom: 1px solid #C8BCA8;
-    margin-bottom: 40px;
-  }
-  .nav-hamburger { display: none; }
-  .nav-mobile-menu { display: none; }
-  @media (max-width: 700px) {
-    html, body { overflow-x: clip; }
-    * { max-width: 100%; }
-    img, video { max-width: 100%; }
-    .nav-links { display: none !important; }
-    .nav-hamburger { display: flex !important; align-items: center; justify-content: center; }
-    .nav-mobile-menu {
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 57px;
-      left: 0; right: 0;
-      background: #111;
-      z-index: 99;
-      padding: 32px 24px 40px;
-      gap: 0;
-      border-bottom: 1px solid #333;
-    }
-    .nav-mobile-menu.closed { display: none; }
-    .hero-h1 { font-size: 36px !important; }
-    .two-col { grid-template-columns: 1fr !important; gap: 40px !important; }
-    .three-col { grid-template-columns: 1fr 1fr !important; }
-    .four-col { grid-template-columns: 1fr 1fr !important; }
-    .six-col { grid-template-columns: repeat(3, 1fr) !important; }
-    .page-pad { padding: 40px 20px !important; }
-    .hero-pad { padding: 64px 20px 56px !important; }
-    .feat-pad { padding: 48px 20px !important; }
-    .footer-inner { flex-direction: column !important; gap: 24px !important; align-items: flex-start !important; }
-    .footer-right { align-items: flex-start !important; }
-    .nav-inner { padding: 18px 20px !important; }
-    .shows-grid { grid-template-columns: 1fr !important; }
-    .shows-month-label { flex: 0 !important; width: 0 !important; padding: 0 !important; overflow: hidden !important; visibility: hidden !important; }
-    .shows-tl-left { width: 20px !important; justify-content: center !important; }
-    .shows-tl-line { left: 10px !important; }
-    .gallery-meta { display: none !important; }
-    .gallery-works-count { display: none !important; }
-    .gallery-section-header { gap: 10px !important; }
-    .gallery-filters { justify-content: flex-start !important; }
-    .gallery-sticky-filters { top: 67px !important; padding-top: 20px !important; }
-  }
-</style>
+<style>*,:before,:after{box-sizing:border-box;margin:0;padding:0}html{-webkit-font-smoothing:antialiased;font-size:16px}body{color:#111;background:#f5f0e8}button{cursor:pointer}::selection{color:#f5f0e8;background:#111}:focus-visible{outline-offset:3px;outline:2px solid #705c48}@media (prefers-reduced-motion:reduce){*,:before,:after{transition:none!important;animation:none!important}}.skip-link{z-index:9999;color:#f5f0e8;letter-spacing:.08em;background:#111;padding:10px 20px;font-family:Montserrat,sans-serif;font-size:13px;text-decoration:none;position:absolute;top:-100%;left:0}.skip-link:focus{top:0}.gallery-sticky-filters{z-index:90;background:#f5f0e8;border-bottom:1px solid #c8bca8;margin-bottom:40px;padding:12px 0;position:sticky;top:81px}.nav-hamburger,.nav-mobile-menu{display:none}@media (width<=700px){html,body{overflow-x:clip}*,img,video{max-width:100%}.nav-links{display:none!important}.nav-hamburger{justify-content:center;align-items:center;display:flex!important}.nav-mobile-menu{z-index:99;background:#111;border-bottom:1px solid #333;flex-direction:column;gap:0;padding:32px 24px 40px;display:flex;position:fixed;top:57px;left:0;right:0}.nav-mobile-menu.closed{display:none}.hero-h1{font-size:36px!important}.two-col{grid-template-columns:1fr!important;gap:40px!important}.three-col,.four-col{grid-template-columns:1fr 1fr!important}.six-col{grid-template-columns:repeat(3,1fr)!important}.page-pad{padding:40px 20px!important}.hero-pad{padding:64px 20px 56px!important}.feat-pad{padding:48px 20px!important}.footer-inner{flex-direction:column!important;align-items:flex-start!important;gap:24px!important}.footer-right{align-items:flex-start!important}.nav-inner{padding:18px 20px!important}.shows-grid{grid-template-columns:1fr!important}.shows-month-label{visibility:hidden!important;flex:0!important;width:0!important;padding:0!important;overflow:hidden!important}.shows-tl-left{justify-content:center!important;width:20px!important}.shows-tl-line{left:10px!important}.gallery-meta,.gallery-works-count{display:none!important}.gallery-section-header{gap:10px!important}.gallery-filters{justify-content:flex-start!important}.gallery-sticky-filters{padding-top:20px!important;top:67px!important}}</style>
   <script type="module" crossorigin src="/valerio-pierbattista-art-2026/bundle.js"></script>
 </head>
 <body>
