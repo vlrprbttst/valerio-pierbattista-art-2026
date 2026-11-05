@@ -473,6 +473,9 @@ function Opening({ onNav }) {
       <h1 className="hero-h1" style={{ fontFamily: "'Montserrat',sans-serif", fontWeight: 300, fontSize: 64, lineHeight: 1.05, letterSpacing: '-0.025em', color: '#111', margin: '0 0 40px' }}>
         Valerio Pierbattista
       </h1>
+      <p style={{ fontFamily: "'Noto Serif',serif", fontSize: 17, lineHeight: 1.85, color: '#2A2A2A', maxWidth: 480, margin: '-8px 0 32px' }}>
+        I work through mixed media, silkscreen, and drawing — exploring identity, culture, and the weight of the familiar made strange.
+      </p>
       <div style={{ margin: '0 0 40px' }}>
         <iframe
           src="https://www.youtube.com/embed/FE-CzWQeSZU?si=OYIvl9TwjSG3qCAe"
